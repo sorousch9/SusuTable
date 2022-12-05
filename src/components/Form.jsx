@@ -16,7 +16,7 @@ const Form = (props) => {
         <input type='text' id='name' />
       </div>
       <div className='form-actions'>
-        <button>Submit</button>
+        <button>Sublmit</button>
       </div>
     </form>
   );

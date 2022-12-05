@@ -48,7 +48,7 @@ body {
 
 .form-control input:focus {
   outline: none;
-  border-color: #240370;
+  border-color: #030e70;
   background-color: #e0d4fd;
 }
 
