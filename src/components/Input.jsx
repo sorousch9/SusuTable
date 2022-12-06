@@ -1,17 +1,26 @@
-import { useState  } from "react";
+import { useEffect, useState } from "react";
 
 const Input = (props) => {
   const [enteredName, setEnteredName] = useState("");
   const [enteredNameTouched, setEnteredNameTouched] = useState(false);
+  const [formIsValid, setFormIsValid] = useState(false);
 
   const enteredNameIsValid = enteredName.trim() !== "";
   const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
+
+  useEffect(() => {
+    if (enteredNameIsValid) {
+      setFormIsValid(true);
+    } else {
+      setFormIsValid(false);
+    }
+  }, [enteredNameIsValid]);
 
   const nameHandeler = (event) => {
     setEnteredName(event.target.value);
   };
 
-  const nameInputBlurHandler = (event) => {
+  const nameInputBlurHandler = () => {
     setEnteredNameTouched(true);
   };
   const formSubmitHandler = (event) => {
@@ -23,7 +32,7 @@ const Input = (props) => {
     }
     console.log(enteredName);
     setEnteredName("");
-    setEnteredNameTouched(false)
+    setEnteredNameTouched(false);
   };
 
   const inputClasses = nameInputIsInvalid
@@ -46,7 +55,7 @@ const Input = (props) => {
         )}
       </div>
       <div className="form-actions">
-        <button>Submit</button>
+        <button disabled={!formIsValid}>Submit</button>
       </div>
     </form>
   );
