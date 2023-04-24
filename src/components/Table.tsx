@@ -11,11 +11,11 @@ type ApiResponse = {
 
 const Table: React.FC<ApiResponse> = ({ columns, data }) => {
   return (
-    <table>
+    <table className="table">
       <thead>
         <tr>
           {columns.map((column) => (
-            <th key={column.doc__}>{column.job__}</th>
+            <th key={column.accessor}>{column.Header}</th>
           ))}
         </tr>
       </thead>
@@ -23,7 +23,7 @@ const Table: React.FC<ApiResponse> = ({ columns, data }) => {
         {data.map((row, rowIndex) => (
           <tr key={rowIndex}>
             {columns.map((column, columnIndex) => (
-              <td key={columnIndex}>{row[column.job__]}</td>
+              <td key={columnIndex}>{row[column.Header]}</td>
             ))}
           </tr>
         ))}
