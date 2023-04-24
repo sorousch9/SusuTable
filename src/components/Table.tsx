@@ -1,4 +1,5 @@
 import { Column } from "../App";
+import { Table } from "react-bootstrap";
 
 type Data = {
   [key: string]: string | number;
@@ -9,11 +10,12 @@ type ApiResponse = {
   data: Data[];
 };
 
-const Table: React.FC<ApiResponse> = ({ columns, data }) => {
+const TableFC: React.FC<ApiResponse> = ({ columns, data }) => {
   return (
-    <table className="table">
+    <Table responsive striped bordered hover>
       <thead>
         <tr>
+          <th>#</th>
           {columns.map((column) => (
             <th key={column.accessor}>{column.Header}</th>
           ))}
@@ -22,14 +24,15 @@ const Table: React.FC<ApiResponse> = ({ columns, data }) => {
       <tbody>
         {data.map((row, rowIndex) => (
           <tr key={rowIndex}>
+            <td>{rowIndex + 1}</td>
             {columns.map((column, columnIndex) => (
               <td key={columnIndex}>{row[column.Header]}</td>
             ))}
           </tr>
         ))}
       </tbody>
-    </table>
+    </Table>
   );
 };
 
-export default Table;
+export default TableFC;
