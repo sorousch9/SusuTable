@@ -5,41 +5,47 @@ import DataSelection from "./components/DataSelection";
 import NavChart from "./components/NavChart";
 import { Container, Col, Row } from "react-bootstrap";
 import Charts from "./components/Charts";
+import axios from "axios";
 
 export interface Column {
-  Header: string;
-  accessor: string;
+  name: string;
+  fieldName: string;
 }
 
-type Data = {
+interface DataRow {
   [key: string]: string | number;
+}
+
+const API_BASE_URL = "https://data.cityofnewyork.us";
+
+const API_ROUTES = {
+  data: "/resource/xnfm-u3k5.json",
+  columns: "/api/views/xnfm-u3k5.json",
 };
 
 function App() {
   const [columns, setColumns] = useState<Column[]>([]);
-  const [data, setData] = useState<Data[]>([]);
+  const [data, setData] = useState<DataRow[]>([]);
+
+  const fetchData = async () => {
+    try {
+      const [dataResponse, columnsResponse] = await Promise.all([
+        axios.get(`${API_BASE_URL}${API_ROUTES.data}`),
+        axios.get(`${API_BASE_URL}${API_ROUTES.columns}`),
+      ]);
+      setData(dataResponse.data);
+      setColumns(columnsResponse.data.columns);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    fetch(
-      "https://data.cityofnewyork.us/resource/xnfm-u3k5.json?$limit=100&$offset=0"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        const columnKeys = Object.keys(data[0]);
-
-        // Convert array of strings to array of Column objects
-        const columns = columnKeys.map((key) => ({
-          Header: key,
-          accessor: key.toLowerCase(),
-        }));
-
-        setData(data);
-        setColumns(columns);
-      });
+    fetchData();
   }, []);
 
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <Col xs={9}>
           <NavChart />
