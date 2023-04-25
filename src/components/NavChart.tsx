@@ -1,7 +1,5 @@
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import Button from "react-bootstrap/Button";
-
 import {
   FcAreaChart,
   FcBarChart,
@@ -11,69 +9,69 @@ import {
   FcLineChart,
   FcPieChart,
 } from "react-icons/fc";
+import { NavLink } from "react-router-dom";
+import "./navChart.css";
+
 const NavChart = () => (
   <div className="navContent">
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Area Chart</Tooltip>}>
-      <Button
-        variant="light"
+      <NavLink
+        to={"/areaChart"}
         className=" d-inline-flex align-items-center navIcons"
       >
         <FcAreaChart />
-      </Button>
+      </NavLink>
     </OverlayTrigger>
 
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Pie Chart</Tooltip>}>
-      <Button
-        variant="light"
-        className="navIcons d-inline-flex align-items-center"
-      >
+      <NavLink to={"/"} className="navIcons d-inline-flex align-items-center">
         <FcPieChart />
-      </Button>
+      </NavLink>
     </OverlayTrigger>
 
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Line Chart</Tooltip>}>
-      <Button
-        variant="light"
+      <NavLink
+        to={"/lineChart"}
         className="navIcons d-inline-flex align-items-center"
       >
         <FcLineChart />
-      </Button>
+      </NavLink>
     </OverlayTrigger>
 
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Bar Chart </Tooltip>}>
-      <Button
-        variant="light"
+      <NavLink
+        to={"/barChart"}
         className="navIcons d-inline-flex align-items-center"
       >
         <FcBarChart />
-      </Button>
+      </NavLink>
     </OverlayTrigger>
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Combo Chart</Tooltip>}>
-      <Button
-        variant="light"
+      <NavLink
+        to={"/comboChart"}
         className="navIcons d-inline-flex align-items-center"
       >
         <FcComboChart />
-      </Button>
+      </NavLink>
     </OverlayTrigger>
     <OverlayTrigger
       placement="bottom"
       overlay={<Tooltip>Doughnut Chart</Tooltip>}
     >
-      <Button
-        variant="light"
+      <NavLink
+        to={"/doughnutChart"}
         className="navIcons d-inline-flex align-items-center"
       >
         <FcDoughnutChart />
-      </Button>
+      </NavLink>
     </OverlayTrigger>
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Flow Chart</Tooltip>}>
-      <Button
-        variant="light"
+      <NavLink
+        to={"/flowChart"}
         className="navIcons d-inline-flex align-items-center"
       >
         <FcFlowChart />
-      </Button>
+      </NavLink>
     </OverlayTrigger>
   </div>
 );

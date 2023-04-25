@@ -1,0 +1,11 @@
+.navContent {
+  border-bottom: 1px solid #bababa;
+}
+.navIcons {
+  font-size: 1.7rem;
+  padding: 10px 10px;
+  border: 0.5px solid #bababa;
+}
+.navIcons:hover {
+  background-color: #ededed;
+}
