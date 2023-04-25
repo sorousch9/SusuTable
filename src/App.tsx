@@ -10,9 +10,7 @@ import { Routes, Route } from "react-router-dom";
 import LineChart from "./components/Charts/LineChart";
 import AreaChart from "./components/Charts/AreaChart";
 import BarChart from "./components/Charts/BarChart";
-import ComboChart from "./components/Charts/ComboChart";
-import FlowChart from "./components/Charts/FlowChart";
-import DoughnutChart from "./components/Charts/DoughnutChart";
+import Histogram from "./components/Charts/Histogram";
 
 export interface Column {
   name: string;
@@ -62,15 +60,15 @@ function App() {
             <Route path="/lineChart" element={<LineChart />} />
             <Route path="/areaChart" element={<AreaChart />} />
             <Route path="/barChart" element={<BarChart />} />
-            <Route path="/comboChart" element={<ComboChart />} />
-            <Route path="/flowChart" element={<FlowChart />} />
-            <Route path="/doughnutChart" element={<DoughnutChart />} />
+            <Route path="/histogram" element={<Histogram />} />
           </Routes>
-          <TableFC columns={columns} data={data} />
         </Col>
         <Col xs={3}>
           <DataSelection />
         </Col>
+      </Row>
+      <Row>
+        <TableFC columns={columns} data={data} />
       </Row>
     </Container>
   );

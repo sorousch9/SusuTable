@@ -25,7 +25,7 @@ const NavChart = () => (
 
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Pie Chart</Tooltip>}>
       <NavLink to={"/"} className="navIcons d-inline-flex align-items-center">
-        <FcPieChart />
+        <FcDoughnutChart />
       </NavLink>
     </OverlayTrigger>
 
@@ -46,31 +46,12 @@ const NavChart = () => (
         <FcBarChart />
       </NavLink>
     </OverlayTrigger>
-    <OverlayTrigger placement="bottom" overlay={<Tooltip>Combo Chart</Tooltip>}>
+    <OverlayTrigger placement="bottom" overlay={<Tooltip>Histogram</Tooltip>}>
       <NavLink
-        to={"/comboChart"}
+        to={"/histogram"}
         className="navIcons d-inline-flex align-items-center"
       >
         <FcComboChart />
-      </NavLink>
-    </OverlayTrigger>
-    <OverlayTrigger
-      placement="bottom"
-      overlay={<Tooltip>Doughnut Chart</Tooltip>}
-    >
-      <NavLink
-        to={"/doughnutChart"}
-        className="navIcons d-inline-flex align-items-center"
-      >
-        <FcDoughnutChart />
-      </NavLink>
-    </OverlayTrigger>
-    <OverlayTrigger placement="bottom" overlay={<Tooltip>Flow Chart</Tooltip>}>
-      <NavLink
-        to={"/flowChart"}
-        className="navIcons d-inline-flex align-items-center"
-      >
-        <FcFlowChart />
       </NavLink>
     </OverlayTrigger>
   </div>
