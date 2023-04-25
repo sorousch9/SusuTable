@@ -15,7 +15,7 @@ export default function DataSelection() {
     <div>
       <OverlayTrigger
         overlay={
-          <Tooltip id="tooltip-disabled">
+          <Tooltip>
             A dimension is a field that orders, groups, or categorizes your
             data, such as dates and categories. The dimension is often shown on
             the x-axis or as points on a map.
@@ -23,7 +23,7 @@ export default function DataSelection() {
         }
       >
         <h4>
-          Dimension <TfiHelpAlt />
+          Dimension <TfiHelpAlt size={"1rem"} />
         </h4>
       </OverlayTrigger>
       <Form>
@@ -38,14 +38,14 @@ export default function DataSelection() {
       </Form>
       <OverlayTrigger
         overlay={
-          <Tooltip id="tooltip-disabled">
+          <Tooltip>
             A measure is a numeric field or the count of rows associated with
             the selected dimension.
           </Tooltip>
         }
       >
         <h4>
-          Measure <TfiHelpAlt />
+          Measure <TfiHelpAlt size={"1rem"} />
         </h4>
       </OverlayTrigger>
       <Form>
