@@ -8,7 +8,14 @@ const Histogram = () => {
           style={{
             data: { fill: "#c43a31" },
           }}
-          data={[{ x: 1 }, { x: 2 }, { x: 2 }, { x: 4 }, { x: 4 }, { x: 5 }]}
+          data={[
+            { x: Math.random() },
+            { x: Math.random() },
+            { x: Math.random()},
+            { x: Math.random() },
+            { x: Math.random()},
+            { x: Math.random() },
+          ]}
         />
       </VictoryChart>
     </div>

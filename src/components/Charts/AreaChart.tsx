@@ -14,11 +14,12 @@ const AreaChart = () => {
               data: { fill: "red", stroke: "red" },
             }}
             data={[
-              { x: 1, y: 2 },
-              { x: 2, y: 3 },
-              { x: 3, y: 5 },
-              { x: 4, y: 4 },
-              { x: 5, y: 7 },
+              { x: 1, y: Math.random() },
+              { x: 2, y: Math.random() },
+              { x: 3, y: Math.random() },
+              { x: 4, y: Math.random() },
+              { x: 5, y: Math.random() },
+              { x: 6, y: Math.random() },
             ]}
           />
           <VictoryArea
@@ -26,11 +27,12 @@ const AreaChart = () => {
               data: { fill: "black", stroke: "gray" },
             }}
             data={[
-              { x: 1, y: 3 },
-              { x: 2, y: 2 },
-              { x: 3, y: 6 },
-              { x: 4, y: 2 },
-              { x: 5, y: 6 },
+              { x: 1, y: Math.random() },
+              { x: 2, y: Math.random() },
+              { x: 3, y: Math.random() },
+              { x: 4, y: Math.random() },
+              { x: 5, y: Math.random() },
+              { x: 6, y: Math.random() },
             ]}
           />
         </VictoryGroup>

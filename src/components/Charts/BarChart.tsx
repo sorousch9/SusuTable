@@ -7,6 +7,9 @@ const BarChart = () => {
         { x: 1, y: Math.random() },
         { x: 2, y: Math.random() },
         { x: 3, y: Math.random() },
+        { x: 4, y: Math.random() },
+        { x: 5, y: Math.random() },
+        { x: 6, y: Math.random() },
       ];
     });
   };
