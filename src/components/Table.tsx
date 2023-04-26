@@ -18,7 +18,6 @@ type Props = {
   setSelectedColumn: (selectedColumn: string) => void;
   setSearchText: (inputText: string) => void;
   searchText: string;
-  filteredData: Data[];
 };
 const TableFC: FC<Props> = ({
   columns,
@@ -30,8 +29,7 @@ const TableFC: FC<Props> = ({
   setCurrentPage,
   currentPage,
   totalCount,
-  PAGE_SIZE,
-  filteredData,
+  PAGE_SIZE
 }) => {
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
   const pages = [];
@@ -85,7 +83,7 @@ const TableFC: FC<Props> = ({
           </tr>
         </thead>
         <tbody>
-          {(filteredData.length === 0 ? data : filteredData).map(
+          {data.map(
             (row, rowIndex) => (
               <tr key={rowIndex}>
                 {columns.map((column, columnIndex) => (
