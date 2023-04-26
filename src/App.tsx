@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import TableFC from "./components/Table";
 import DataSelection from "./components/DataSelection";
 import NavChart from "./components/NavChart";
@@ -30,6 +30,30 @@ const App = () => {
   const [selectedColumn, setSelectedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
 
+  const API_BASE_URL = "https://data.cityofnewyork.us";
+  const API_ROUTES = {
+    data: `/resource/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`,
+    columns: "/api/views/xnfm-u3k5.json",
+  };
+
+  const fetchTableData = useCallback(async () => {
+    try {
+      const [dataResponse, columnsResponse] = await Promise.all([
+        axios.get(`${API_BASE_URL}${API_ROUTES.data}`),
+        axios.get(`${API_BASE_URL}${API_ROUTES.columns}`),
+      ]);
+      setData(dataResponse.data);
+      setColumns(columnsResponse.data.columns);
+      setTotalCount(150);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [API_BASE_URL, API_ROUTES.data, API_ROUTES.columns]);
+
+  useEffect(() => {
+    fetchTableData();
+  }, [fetchTableData]);
+
   const filteredData = data.filter((row) =>
     Object.keys(row).some(
       (key) =>
@@ -38,28 +62,7 @@ const App = () => {
         row[key].toString().toLowerCase().includes(searchText.toLowerCase())
     )
   );
-
-  const API_BASE_URL = "https://data.cityofnewyork.us";
-  const API_ROUTES = {
-    data: `/resource/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`,
-    columns: "/api/views/xnfm-u3k5.json",
-  };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [dataResponse, columnsResponse] = await Promise.all([
-          axios.get(`${API_BASE_URL}${API_ROUTES.data}`),
-          axios.get(`${API_BASE_URL}${API_ROUTES.columns}`),
-        ]);
-        setData(dataResponse.data);
-        setColumns(columnsResponse.data.columns);
-        setTotalCount(150);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, [API_ROUTES.data, API_ROUTES.columns]);
+  
   return (
     <Container fluid>
       <Row>
