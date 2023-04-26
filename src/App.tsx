@@ -21,35 +21,34 @@ interface DataRow {
   [key: string]: string | number;
 }
 
-const API_BASE_URL = "https://data.cityofnewyork.us";
-
-const API_ROUTES = {
-  data: "/resource/xnfm-u3k5.json",
-  columns: "/api/views/xnfm-u3k5.json",
-};
-
-function App() {
-  //name:Header and fieldName:accessorKey
+const PAGE_SIZE = 10;
+const App = () => {
   const [columns, setColumns] = useState<Column[]>([]);
   const [data, setData] = useState<DataRow[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalCount, setTotalCount] = useState<number>(0);
 
-  const fetchData = async () => {
-    try {
-      const [dataResponse, columnsResponse] = await Promise.all([
-        axios.get(`${API_BASE_URL}${API_ROUTES.data}`),
-        axios.get(`${API_BASE_URL}${API_ROUTES.columns}`),
-      ]);
-      setData(dataResponse.data);
-      setColumns(columnsResponse.data.columns);
-    } catch (error) {
-      console.log(error);
-    }
+  const API_BASE_URL = "https://data.cityofnewyork.us";
+  const API_ROUTES = {
+    data: `/resource/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`,
+    columns: "/api/views/xnfm-u3k5.json",
   };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [dataResponse, columnsResponse] = await Promise.all([
+          axios.get(`${API_BASE_URL}${API_ROUTES.data}`),
+          axios.get(`${API_BASE_URL}${API_ROUTES.columns}`),
+        ]);
+        setData(dataResponse.data);
+        setColumns(columnsResponse.data.columns);
+        setTotalCount(150);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchData();
-  }, []);
-
+  }, [API_ROUTES.data, API_ROUTES.columns]);
   return (
     <Container fluid>
       <Row>
@@ -68,10 +67,17 @@ function App() {
         </Col>
       </Row>
       <Row>
-        <TableFC columns={columns} data={data} />
+        <TableFC
+          PAGE_SIZE={PAGE_SIZE}
+          columns={columns}
+          data={data}
+          totalCount={totalCount}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       </Row>
     </Container>
   );
-}
+};
 
 export default App;
