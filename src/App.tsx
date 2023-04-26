@@ -29,7 +29,7 @@ const App = () => {
   const [totalCount, setTotalCount] = useState<number>(0);
   const [selectedColumn, setSelectedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
-
+  console.log(totalCount);
   const API_BASE_URL = "https://data.cityofnewyork.us";
   const API_ROUTES = {
     data: `/resource/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`,
@@ -44,7 +44,7 @@ const App = () => {
       ]);
       setData(dataResponse.data);
       setColumns(columnsResponse.data.columns);
-      setTotalCount(150);
+      setTotalCount(columnsResponse.data.columns[0].cachedContents.count);
     } catch (error) {
       console.log(error);
     }
@@ -62,7 +62,7 @@ const App = () => {
         row[key].toString().toLowerCase().includes(searchText.toLowerCase())
     )
   );
-  
+
   return (
     <Container fluid>
       <Row>
