@@ -2,7 +2,6 @@ import { Column } from "../App";
 import { Pagination, Table } from "react-bootstrap";
 import { FC } from "react";
 import "./table.css";
-import { useState } from "react";
 
 type Data = {
   [key: string]: string | number;
@@ -15,27 +14,25 @@ type Props = {
   setCurrentPage: (pageNumber: number) => void;
   totalCount: number;
   PAGE_SIZE: number;
+  selectedColumn: string;
+  setSelectedColumn: (selectedColumn: string) => void;
+  setSearchText: (inputText: string) => void;
+  searchText: string;
+  filteredData: Data[];
 };
 const TableFC: FC<Props> = ({
   columns,
+  selectedColumn,
+  setSelectedColumn,
+  setSearchText,
+  searchText,
   data,
   setCurrentPage,
   currentPage,
   totalCount,
   PAGE_SIZE,
+  filteredData,
 }) => {
-  const [selectedColumn, setSelectedColumn] = useState("");
-  const [searchText, setSearchText] = useState("");
-
-  const filteredData = data.filter((row) =>
-    Object.keys(row).some(
-      (key) =>
-        key === selectedColumn &&
-        row[key] &&
-        row[key].toString().toLowerCase().includes(searchText.toLowerCase())
-    )
-  );
-
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
   const pages = [];
   const maxPagesToShow = 5;
@@ -70,7 +67,6 @@ const TableFC: FC<Props> = ({
             {columns.map((column) => (
               <th key={column.fieldName}>
                 {column.name}
-
                 <div>
                   <input
                     type="text"
@@ -89,13 +85,15 @@ const TableFC: FC<Props> = ({
           </tr>
         </thead>
         <tbody>
-          {filteredData.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {columns.map((column, columnIndex) => (
-                <td key={columnIndex}>{row[column.fieldName]}</td>
-              ))}
-            </tr>
-          ))}
+          {(filteredData.length === 0 ? data : filteredData).map(
+            (row, rowIndex) => (
+              <tr key={rowIndex}>
+                {columns.map((column, columnIndex) => (
+                  <td key={columnIndex}>{row[column.fieldName]}</td>
+                ))}
+              </tr>
+            )
+          )}
         </tbody>
       </Table>
       <Pagination className="justify-content-center">
