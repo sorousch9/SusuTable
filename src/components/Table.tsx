@@ -2,6 +2,7 @@ import { Column } from "../App";
 import { Pagination, Table } from "react-bootstrap";
 import { FC } from "react";
 import "./table.css";
+import { useState } from "react";
 
 type Data = {
   [key: string]: string | number;
@@ -23,6 +24,18 @@ const TableFC: FC<Props> = ({
   totalCount,
   PAGE_SIZE,
 }) => {
+  const [selectedColumn, setSelectedColumn] = useState("");
+  const [searchText, setSearchText] = useState("");
+
+  const filteredData = data.filter((row) =>
+    Object.keys(row).some(
+      (key) =>
+        key === selectedColumn &&
+        row[key] &&
+        row[key].toString().toLowerCase().includes(searchText.toLowerCase())
+    )
+  );
+
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
   const pages = [];
   const maxPagesToShow = 5;
@@ -55,12 +68,28 @@ const TableFC: FC<Props> = ({
         <thead>
           <tr>
             {columns.map((column) => (
-              <th key={column.fieldName}>{column.name}</th>
+              <th key={column.fieldName}>
+                {column.name}
+
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    value={
+                      selectedColumn === column.fieldName ? searchText : ""
+                    }
+                    onChange={(e) => {
+                      setSelectedColumn(column.fieldName);
+                      setSearchText(e.target.value);
+                    }}
+                  />
+                </div>
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {data.map((row, rowIndex) => (
+          {filteredData.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {columns.map((column, columnIndex) => (
                 <td key={columnIndex}>{row[column.fieldName]}</td>
