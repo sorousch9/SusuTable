@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import TableFC from "./components/Table";
 import DataSelection from "./components/DataSelection";
 import NavChart from "./components/NavChart";
@@ -22,6 +22,7 @@ interface DataRow {
 }
 
 const PAGE_SIZE = 10;
+
 const App = () => {
   const [columns, setColumns] = useState<Column[]>([]);
   const [data, setData] = useState<DataRow[]>([]);
@@ -29,12 +30,15 @@ const App = () => {
   const [totalCount, setTotalCount] = useState<number>(0);
   const [selectedColumn, setSelectedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
-  console.log(totalCount);
+
   const API_BASE_URL = "https://data.cityofnewyork.us";
-  const API_ROUTES = {
-    data: `/resource/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`,
-    columns: "/api/views/xnfm-u3k5.json",
-  };
+  const API_ROUTES = useMemo(
+    () => ({
+      data: `/resource/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}&$where=${selectedColumn}='${searchText}'`,
+      columns: "/api/views/xnfm-u3k5.json",
+    }),
+    [currentPage]
+  );
 
   const fetchTableData = useCallback(async () => {
     try {
@@ -53,15 +57,6 @@ const App = () => {
   useEffect(() => {
     fetchTableData();
   }, [fetchTableData]);
-
-  const filteredData = data.filter((row) =>
-    Object.keys(row).some(
-      (key) =>
-        key === selectedColumn &&
-        row[key] &&
-        row[key].toString().toLowerCase().includes(searchText.toLowerCase())
-    )
-  );
 
   return (
     <Container fluid>
@@ -92,7 +87,6 @@ const App = () => {
           setSelectedColumn={setSelectedColumn}
           setSearchText={setSearchText}
           searchText={searchText}
-          filteredData={filteredData}
         />
       </Row>
     </Container>
