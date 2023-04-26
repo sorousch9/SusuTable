@@ -27,6 +27,17 @@ const App = () => {
   const [data, setData] = useState<DataRow[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(0);
+  const [selectedColumn, setSelectedColumn] = useState("");
+  const [searchText, setSearchText] = useState("");
+
+  const filteredData = data.filter((row) =>
+    Object.keys(row).some(
+      (key) =>
+        key === selectedColumn &&
+        row[key] &&
+        row[key].toString().toLowerCase().includes(searchText.toLowerCase())
+    )
+  );
 
   const API_BASE_URL = "https://data.cityofnewyork.us";
   const API_ROUTES = {
@@ -74,6 +85,11 @@ const App = () => {
           totalCount={totalCount}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
+          selectedColumn={selectedColumn}
+          setSelectedColumn={setSelectedColumn}
+          setSearchText={setSearchText}
+          searchText={searchText}
+          filteredData={filteredData}
         />
       </Row>
     </Container>
