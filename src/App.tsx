@@ -32,13 +32,13 @@ const App = () => {
   const [searchText, setSearchText] = useState("");
 
   const API_BASE_URL = "https://data.cityofnewyork.us";
-  const API_ROUTES = useMemo(
-    () => ({
-      data: `/resource/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}&$where=${selectedColumn}='${searchText}'`,
-      columns: "/api/views/xnfm-u3k5.json",
-    }),
-    [currentPage]
-  );
+  const API_ROUTES = useMemo(() => {
+    let route = `/resource/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
+    if (selectedColumn && searchText) {
+      route += `&$where=${selectedColumn}='${searchText}'`;
+    }
+    return { data: route, columns: "/api/views/xnfm-u3k5.json" };
+  }, [currentPage, selectedColumn, searchText]);
 
   const fetchTableData = useCallback(async () => {
     try {
