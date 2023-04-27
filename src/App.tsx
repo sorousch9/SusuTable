@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import TableFC from "./components/Table";
 import DataSelection from "./components/DataSelection";
 import NavChart from "./components/NavChart";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Form } from "react-bootstrap";
 import PieChart from "./components/Charts/PieChart";
 import axios from "axios";
 import { Routes, Route } from "react-router-dom";
@@ -31,6 +31,8 @@ const App = () => {
   const [totalCount, setTotalCount] = useState<number>(0);
   const [selectedColumn, setSelectedColumn] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
+  const [minValue, setMinValue] = useState<number|undefined>();
+  const [maxValue, setMaxValue] = useState<number|undefined>();
 
   const API_BASE_URL = "https://data.cityofnewyork.us";
   const API_ROUTES = useMemo(() => {
@@ -41,12 +43,17 @@ const App = () => {
       route += searchClause;
       countRoute += searchClause;
     }
+    if (minValue !== undefined && maxValue !== undefined) {
+      const rangeClause = `&$where=(${selectedColumn} >= ${minValue} AND ${selectedColumn} <= ${maxValue})`;
+      route += rangeClause;
+      countRoute += rangeClause;
+    }
     return {
       data: route,
       count: countRoute,
       columns: "/api/views/xnfm-u3k5.json",
     };
-  }, [currentPage, selectedColumn, searchText]);
+  }, [currentPage, selectedColumn, searchText, minValue, maxValue]);
 
   const fetchTableData = useCallback(async () => {
     try {
@@ -96,6 +103,10 @@ const App = () => {
           setSelectedColumn={setSelectedColumn}
           setSearchText={setSearchText}
           searchText={searchText}
+          minValue={minValue}
+          setMinValue={setMinValue}
+          maxValue={maxValue}
+          setMaxValue={setMaxValue}
         />
       </Row>
     </Container>
