@@ -20,8 +20,9 @@
 .columnBtn {
   cursor: pointer;
 }
-
+/* th */
 .columnName {
+  cursor: pointer;
   max-inline-size: 130px;
   flex: 1;
   white-space: nowrap;
@@ -32,9 +33,6 @@ td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.menu input{
-  width: 130px;
 }
 .pagination {
   display: flex;

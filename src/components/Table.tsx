@@ -68,11 +68,58 @@ const TableFC: FC<Props> = ({
               <th key={column.fieldName}>
                 <div className="columnHeaderContent">
                   <OverlayTrigger
-                    trigger="hover"
+                    trigger="click"
                     placement="top"
                     overlay={
                       <Popover>
                         <Popover.Header as="h3">{column.name}</Popover.Header>
+                        <Popover.Body as="div">
+                          {column.dataTypeName === "text" ? (
+                            <input
+                              type="text"
+                              placeholder="Search"
+                              value={
+                                selectedColumn === column.fieldName
+                                  ? searchText
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                setSelectedColumn(column.fieldName);
+                                setSearchText(e.target.value.toUpperCase());
+                              }}
+                            />
+                          ) : column.dataTypeName === "number" ? (
+                            <input
+                              type="number"
+                              placeholder="Enter a number"
+                              value={
+                                selectedColumn === column.fieldName
+                                  ? searchText
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                setSelectedColumn(column.fieldName);
+                                setSearchText(e.target.value);
+                              }}
+                            />
+                          ) : column.dataTypeName === "calendar_date" ? (
+                            <input
+                              type="date"
+                              placeholder="Select a date"
+                              value={
+                                selectedColumn === column.fieldName
+                                  ? searchText
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                setSelectedColumn(column.fieldName);
+                                setSearchText(e.target.value);
+                              }}
+                            />
+                          ) : (
+                            ""
+                          )}
+                        </Popover.Body>
                       </Popover>
                     }
                   >
@@ -85,52 +132,6 @@ const TableFC: FC<Props> = ({
                     <BiDotsVerticalRounded />
                   </span>
                 </div>
-
-                {isMenuOpen ? (
-                  <div className="menu">
-                    {column.dataTypeName === "text" ? (
-                      <input
-                        type="text"
-                        placeholder="Search"
-                        value={
-                          selectedColumn === column.fieldName ? searchText : ""
-                        }
-                        onChange={(e) => {
-                          setSelectedColumn(column.fieldName);
-                          setSearchText(e.target.value.toUpperCase());
-                        }}
-                      />
-                    ) : column.dataTypeName === "number" ? (
-                      <input
-                        type="number"
-                        placeholder="Enter a number"
-                        value={
-                          selectedColumn === column.fieldName ? searchText : ""
-                        }
-                        onChange={(e) => {
-                          setSelectedColumn(column.fieldName);
-                          setSearchText(e.target.value);
-                        }}
-                      />
-                    ) : column.dataTypeName === "calendar_date" ? (
-                      <input
-                        type="date"
-                        placeholder="Select a date"
-                        value={
-                          selectedColumn === column.fieldName ? searchText : ""
-                        }
-                        onChange={(e) => {
-                          setSelectedColumn(column.fieldName);
-                          setSearchText(e.target.value);
-                        }}
-                      />
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                ) : (
-                  ""
-                )}
               </th>
             ))}
           </tr>
@@ -140,7 +141,8 @@ const TableFC: FC<Props> = ({
             <tr key={rowIndex}>
               {columns.map((column, columnIndex) => (
                 <OverlayTrigger
-                  trigger="hover"
+                  key={columnIndex}
+                  trigger={["hover", "focus"]}
                   placement="auto"
                   overlay={
                     <Popover>
