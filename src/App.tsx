@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import TableFC from "./components/Table";
 import DataSelection from "./components/DataSelection";
 import NavChart from "./components/NavChart";
-import { Container, Col, Row, Form } from "react-bootstrap";
+import { Container, Col, Row } from "react-bootstrap";
 import PieChart from "./components/Charts/PieChart";
 import axios from "axios";
 import { Routes, Route } from "react-router-dom";
@@ -16,6 +16,10 @@ export interface Column {
   name: string;
   fieldName: string;
   dataTypeName: string;
+  cachedContents: {
+    largest: string;
+    smallest: string;
+  };
 }
 
 interface DataRow {
@@ -31,16 +35,16 @@ const App = () => {
   const [totalCount, setTotalCount] = useState<number>(0);
   const [selectedColumn, setSelectedColumn] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
-  const [minValue, setMinValue] = useState<number | undefined>();
-  const [maxValue, setMaxValue] = useState<number | undefined>();
+  const [minValue, setMinValue] = useState<number>(0);
+  const [maxValue, setMaxValue] = useState<number>(0);
 
   const API_BASE_URL = "https://data.cityofnewyork.us";
 
   const API_ROUTES = useMemo(() => {
     let dataRoute = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
     let countRoute = `/id/xnfm-u3k5.json?$select=count(*) as __count_alias__`;
-    
-  // Add search clause if both selectedColumn and searchText exist
+
+    // Add search clause if both selectedColumn and searchText exist
     if (selectedColumn && searchText) {
       const searchClause = `&$where=(upper(${selectedColumn}) LIKE '%25${searchText}%25')`;
       dataRoute += searchClause;
@@ -48,13 +52,13 @@ const App = () => {
     }
 
     // Add range clause if either minValue or maxValue exist
-    if (minValue !== undefined || maxValue !== undefined) {
+    if (minValue !== 0 || maxValue !== 0) {
       let rangeClause = "&$where=(";
-      if (minValue !== undefined) {
+      if (minValue !== 0) {
         rangeClause += `${selectedColumn} >= ${minValue}`;
       }
-      if (maxValue !== undefined) {
-        if (minValue !== undefined) {
+      if (maxValue !== 0) {
+        if (minValue !== 0) {
           rangeClause += ` AND `;
         }
         rangeClause += `${selectedColumn} <= ${maxValue}`;
@@ -67,10 +71,10 @@ const App = () => {
     return {
       data: dataRoute,
       count: countRoute,
-      columns: "/api/views/xnfm-u3k5.json",
+      columns: "/api/views/xnfm-u3k5.json?&$$read_from_nbe=true&$$version=2.1",
     };
   }, [currentPage, selectedColumn, searchText, minValue, maxValue]);
-  
+
   const fetchTableData = useCallback(async () => {
     try {
       const [dataResponse, countResponse, columnsResponse] = await Promise.all([
