@@ -1,9 +1,11 @@
 import { Column } from "../App";
 import { OverlayTrigger, Pagination, Table } from "react-bootstrap";
-import { FC, useState } from "react";
+import { FC } from "react";
 import "./table.css";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import Popover from "react-bootstrap/Popover";
+import { BsSortDownAlt } from "react-icons/bs";
+import { BsSortUp } from "react-icons/bs";
 type Data = {
   [key: string]: string | number;
 };
@@ -32,7 +34,6 @@ const TableFC: FC<Props> = ({
   totalCount,
   PAGE_SIZE,
 }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
   const pages = [];
   const maxPagesToShow = 5;
@@ -66,72 +67,86 @@ const TableFC: FC<Props> = ({
           <tr>
             {columns.map((column) => (
               <th key={column.fieldName}>
-                <div className="columnHeaderContent">
-                  <OverlayTrigger
-                    trigger="click"
-                    placement="top"
-                    overlay={
-                      <Popover>
-                        <Popover.Header as="h3">{column.name}</Popover.Header>
-                        <Popover.Body as="div">
-                          {column.dataTypeName === "text" ? (
-                            <input
-                              type="text"
-                              placeholder="Search"
-                              value={
-                                selectedColumn === column.fieldName
-                                  ? searchText
-                                  : ""
-                              }
-                              onChange={(e) => {
-                                setSelectedColumn(column.fieldName);
-                                setSearchText(e.target.value.toUpperCase());
-                              }}
-                            />
-                          ) : column.dataTypeName === "number" ? (
-                            <input
-                              type="number"
-                              placeholder="Enter a number"
-                              value={
-                                selectedColumn === column.fieldName
-                                  ? searchText
-                                  : ""
-                              }
-                              onChange={(e) => {
-                                setSelectedColumn(column.fieldName);
-                                setSearchText(e.target.value);
-                              }}
-                            />
-                          ) : column.dataTypeName === "calendar_date" ? (
-                            <input
-                              type="date"
-                              placeholder="Select a date"
-                              value={
-                                selectedColumn === column.fieldName
-                                  ? searchText
-                                  : ""
-                              }
-                              onChange={(e) => {
-                                setSelectedColumn(column.fieldName);
-                                setSearchText(e.target.value);
-                              }}
-                            />
-                          ) : (
-                            ""
-                          )}
-                        </Popover.Body>
-                      </Popover>
-                    }
-                  >
+                <OverlayTrigger
+                  trigger="click"
+                  placement="top"
+                  overlay={
+                    <Popover>
+                      <Popover.Header as="h3">{column.name}</Popover.Header>
+                      <Popover.Body as="div">
+                        {column.dataTypeName === "text" ? (
+                          <input
+                            className="tableInput"
+                            type="text"
+                            placeholder="Search"
+                            value={
+                              selectedColumn === column.fieldName
+                                ? searchText
+                                : ""
+                            }
+                            onChange={(e) => {
+                              setSelectedColumn(column.fieldName);
+                              setSearchText(e.target.value.toUpperCase());
+                            }}
+                          />
+                        ) : column.dataTypeName === "number" ? (
+                          <input
+                            className="tableInput"
+                            type="number"
+                            placeholder="Enter a number"
+                            value={
+                              selectedColumn === column.fieldName
+                                ? searchText
+                                : ""
+                            }
+                            onChange={(e) => {
+                              setSelectedColumn(column.fieldName);
+                              setSearchText(e.target.value);
+                            }}
+                          />
+                        ) : column.dataTypeName === "calendar_date" ? (
+                          <input
+                            className="tableInput"
+                            type="date"
+                            placeholder="Select a date"
+                            value={
+                              selectedColumn === column.fieldName
+                                ? searchText
+                                : ""
+                            }
+                            onChange={(e) => {
+                              setSelectedColumn(column.fieldName);
+                              setSearchText(e.target.value);
+                            }}
+                          />
+                        ) : (
+                          ""
+                        )}
+                        <button className="sortMenuBtn">
+                          <span className="sortMenuIco">
+                            <BsSortUp size={"1.5rem"} />
+                          </span>
+                          <span className="sortMenuContent">
+                            Sort Ascending
+                          </span>
+                        </button>
+                        <button className="sortMenuBtn">
+                          <BsSortDownAlt size={"1.5rem"} />
+                          <span className="sortMenuContent">
+                            Sort Decending
+                          </span>
+                        </button>
+                      </Popover.Body>
+                    </Popover>
+                  }
+                >
+                  <button className="columnHeaderContent">
                     <span className="columnName">{column.name}</span>
-                  </OverlayTrigger>
-                  <span
-                    className="columnBtn"
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  >
-                    <BiDotsVerticalRounded />
-                  </span>
-                </div>
+                    <span className="columnBtn">
+                      <BiDotsVerticalRounded />
+                    </span>
+                  </button>
+                </OverlayTrigger>
               </th>
             ))}
           </tr>

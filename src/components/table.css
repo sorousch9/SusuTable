@@ -3,36 +3,58 @@
   justify-content: center;
   align-content: center;
   flex-direction: column;
-  box-shadow: rgba(60, 64, 67, 03) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 .table {
   position: relative;
-  /* move the table up by 30 pixels */
+  box-shadow: rgba(60, 64, 67, 07) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 1) 0px 1px 3px 1px;
 }
 
 .columnHeaderContent {
-  display: flex;
-  align-items: center;
+  width: 100%;
+  display: inline-flex;
   justify-content: space-between;
-}
-
-.columnBtn {
-  cursor: pointer;
-}
-/* th */
-.columnName {
-  cursor: pointer;
   max-inline-size: 130px;
+  border: none;
+  background-color: inherit;
+  padding: 0rem 0rem;
+}
+.columnName {
   flex: 1;
   white-space: nowrap;
   overflow: hidden;
+  text-align: start;
 }
+
 td {
   max-width: 130px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.sortMenuBtn {
+  width: 100%;
+  background-color: transparent;
+  margin: 0.3rem 0rem;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 0.2px solid #666;
+}
+.sortMenuBtn:focus {
+  background-color: #dae2fa;
+}
+.sortMenuBtn:hover {
+  background-color: #e8edfa;
+}
+.tableInput {
+  width: 100%;
+  outline: none;
+  padding: .3rem;
+}
+.sortMenuContent {
+  font-size: 1rem;
 }
 .pagination {
   display: flex;
