@@ -35,34 +35,42 @@ const App = () => {
   const [maxValue, setMaxValue] = useState<number | undefined>();
 
   const API_BASE_URL = "https://data.cityofnewyork.us";
+
   const API_ROUTES = useMemo(() => {
-    let route = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
+    let dataRoute = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
     let countRoute = `/id/xnfm-u3k5.json?$select=count(*) as __count_alias__`;
+    
+  // Add search clause if both selectedColumn and searchText exist
     if (selectedColumn && searchText) {
       const searchClause = `&$where=(upper(${selectedColumn}) LIKE '%25${searchText}%25')`;
-      route += searchClause;
+      dataRoute += searchClause;
       countRoute += searchClause;
     }
-    if (minValue !== undefined && maxValue !== undefined) {
-      const rangeClause = `&$where=(${selectedColumn} >= ${minValue} AND ${selectedColumn} <= ${maxValue})`;
-      route += rangeClause;
-      countRoute += rangeClause;
-    } else if (minValue !== undefined) {
-      const rangeClause = `&$where=(${selectedColumn} >= ${minValue})`;
-      route += rangeClause;
-      countRoute += rangeClause;
-    } else if (maxValue !== undefined) {
-      const rangeClause = `&$where=(${selectedColumn} <= ${maxValue})`;
-      route += rangeClause;
+
+    // Add range clause if either minValue or maxValue exist
+    if (minValue !== undefined || maxValue !== undefined) {
+      let rangeClause = "&$where=(";
+      if (minValue !== undefined) {
+        rangeClause += `${selectedColumn} >= ${minValue}`;
+      }
+      if (maxValue !== undefined) {
+        if (minValue !== undefined) {
+          rangeClause += ` AND `;
+        }
+        rangeClause += `${selectedColumn} <= ${maxValue}`;
+      }
+      rangeClause += ")";
+      dataRoute += rangeClause;
       countRoute += rangeClause;
     }
-    console.log(route);
+
     return {
-      data: route,
+      data: dataRoute,
       count: countRoute,
       columns: "/api/views/xnfm-u3k5.json",
     };
   }, [currentPage, selectedColumn, searchText, minValue, maxValue]);
+  
   const fetchTableData = useCallback(async () => {
     try {
       const [dataResponse, countResponse, columnsResponse] = await Promise.all([
