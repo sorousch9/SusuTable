@@ -1,8 +1,9 @@
 import { Column } from "../App";
-import { Pagination, Table } from "react-bootstrap";
-import { FC } from "react";
+import { OverlayTrigger, Pagination, Table } from "react-bootstrap";
+import { FC, useState } from "react";
 import "./table.css";
-
+import { BiDotsVerticalRounded } from "react-icons/bi";
+import Popover from "react-bootstrap/Popover";
 type Data = {
   [key: string]: string | number;
 };
@@ -29,8 +30,9 @@ const TableFC: FC<Props> = ({
   setCurrentPage,
   currentPage,
   totalCount,
-  PAGE_SIZE
+  PAGE_SIZE,
 }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
   const pages = [];
   const maxPagesToShow = 5;
@@ -64,34 +66,95 @@ const TableFC: FC<Props> = ({
           <tr>
             {columns.map((column) => (
               <th key={column.fieldName}>
-                {column.name}
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    value={
-                      selectedColumn === column.fieldName ? searchText : ""
+                <div className="columnHeaderContent">
+                  <OverlayTrigger
+                    trigger="hover"
+                    placement="top"
+                    overlay={
+                      <Popover>
+                        <Popover.Header as="h3">{column.name}</Popover.Header>
+                      </Popover>
                     }
-                    onChange={(e) => {
-                      setSelectedColumn(column.fieldName);
-                      setSearchText(e.target.value);
-                    }}
-                  />
+                  >
+                    <span className="columnName">{column.name}</span>
+                  </OverlayTrigger>
+                  <span
+                    className="columnBtn"
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  >
+                    <BiDotsVerticalRounded />
+                  </span>
                 </div>
+
+                {isMenuOpen ? (
+                  <div className="menu">
+                    {column.dataTypeName === "text" ? (
+                      <input
+                        type="text"
+                        placeholder="Search"
+                        value={
+                          selectedColumn === column.fieldName ? searchText : ""
+                        }
+                        onChange={(e) => {
+                          setSelectedColumn(column.fieldName);
+                          setSearchText(e.target.value.toUpperCase());
+                        }}
+                      />
+                    ) : column.dataTypeName === "number" ? (
+                      <input
+                        type="number"
+                        placeholder="Enter a number"
+                        value={
+                          selectedColumn === column.fieldName ? searchText : ""
+                        }
+                        onChange={(e) => {
+                          setSelectedColumn(column.fieldName);
+                          setSearchText(e.target.value);
+                        }}
+                      />
+                    ) : column.dataTypeName === "calendar_date" ? (
+                      <input
+                        type="date"
+                        placeholder="Select a date"
+                        value={
+                          selectedColumn === column.fieldName ? searchText : ""
+                        }
+                        onChange={(e) => {
+                          setSelectedColumn(column.fieldName);
+                          setSearchText(e.target.value);
+                        }}
+                      />
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                ) : (
+                  ""
+                )}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {data.map(
-            (row, rowIndex) => (
-              <tr key={rowIndex}>
-                {columns.map((column, columnIndex) => (
+          {data.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {columns.map((column, columnIndex) => (
+                <OverlayTrigger
+                  trigger="hover"
+                  placement="auto"
+                  overlay={
+                    <Popover>
+                      <Popover.Body as="span">
+                        {row[column.fieldName]}
+                      </Popover.Body>
+                    </Popover>
+                  }
+                >
                   <td key={columnIndex}>{row[column.fieldName]}</td>
-                ))}
-              </tr>
-            )
-          )}
+                </OverlayTrigger>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </Table>
       <Pagination className="justify-content-center">

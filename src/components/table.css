@@ -7,56 +7,87 @@
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 .table {
-  display: block;
-  overflow-x: auto;
-  white-space: nowrap;
-  border-radius: 12px;
+  position: relative;
+  /* move the table up by 30 pixels */
 }
 
-.table thead th {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  background-color: #fff;
-  z-index: 1;
+.columnHeaderContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.table td,
-.table th {
-  padding: 5px 8px;
-  text-align: left;
+.columnBtn {
+  cursor: pointer;
+}
+
+.columnName {
+  max-inline-size: 130px;
+  flex: 1;
   white-space: nowrap;
-  max-width: 8rem;
+  overflow: hidden;
+}
+td {
+  max-width: 130px;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.menu input{
+  width: 130px;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
 
-@media (max-width: 767px) {
-  .table {
-    display: table;
-    overflow-x: scroll;
-  }
+.pagination > li > a,
+.pagination > li > span {
+  color: #666;
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-right: 5px;
+  cursor: pointer;
+}
 
-  .table thead,
-  .table tbody,
-  .table th,
-  .table td,
-  .table tr {
-    display: block;
-  }
+.pagination > li > a:hover,
+.pagination > li > a:focus,
+.pagination > li > span:hover,
+.pagination > li > span:focus {
+  background-color: #f1f1f1;
+}
 
-  .table tbody tr {
-    border-bottom: 2px solid #ddd;
-  }
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+  background-color: #666666;
+  color: #fff;
+  border-color: #323232;
+}
 
-  .table td {
-    border-bottom: none;
-  }
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus {
+  color: #ccc;
+  cursor: not-allowed;
+  background-color: transparent;
+  border-color: #ddd;
+}
 
-  .table td:before {
-    content: attr(data-label);
-    display: inline-block;
-    font-weight: bold;
-    margin-right: 5px;
-  }
+.pagination > li:first-child > a,
+.pagination > li:first-child > span {
+  margin-right: 10px;
+}
+
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+  margin-left: 10px;
 }
