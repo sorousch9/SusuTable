@@ -15,6 +15,7 @@ import Histogram from "./components/Charts/Histogram";
 export interface Column {
   name: string;
   fieldName: string;
+  dataTypeName: string;
 }
 
 interface DataRow {
@@ -28,31 +29,39 @@ const App = () => {
   const [data, setData] = useState<DataRow[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(0);
-  const [selectedColumn, setSelectedColumn] = useState("");
-  const [searchText, setSearchText] = useState("");
+  const [selectedColumn, setSelectedColumn] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>("");
 
   const API_BASE_URL = "https://data.cityofnewyork.us";
   const API_ROUTES = useMemo(() => {
-    let route = `/resource/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
+    let route = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
+    let countRoute = `/id/xnfm-u3k5.json?$select=count(*) as __count_alias__`;
     if (selectedColumn && searchText) {
-      route += `&$where=${selectedColumn}='${searchText}'`;
+      const searchClause = `&$where=(upper(${selectedColumn}) LIKE '%25${searchText}%25')`;
+      route += searchClause;
+      countRoute += searchClause;
     }
-    return { data: route, columns: "/api/views/xnfm-u3k5.json" };
+    return {
+      data: route,
+      count: countRoute,
+      columns: "/api/views/xnfm-u3k5.json",
+    };
   }, [currentPage, selectedColumn, searchText]);
 
   const fetchTableData = useCallback(async () => {
     try {
-      const [dataResponse, columnsResponse] = await Promise.all([
+      const [dataResponse, countResponse, columnsResponse] = await Promise.all([
         axios.get(`${API_BASE_URL}${API_ROUTES.data}`),
+        axios.get(`${API_BASE_URL}${API_ROUTES.count}`),
         axios.get(`${API_BASE_URL}${API_ROUTES.columns}`),
       ]);
       setData(dataResponse.data);
       setColumns(columnsResponse.data.columns);
-      setTotalCount(columnsResponse.data.columns[0].cachedContents.count);
+      setTotalCount(countResponse.data[0].__count_alias__);
     } catch (error) {
       console.log(error);
     }
-  }, [API_BASE_URL, API_ROUTES.data, API_ROUTES.columns]);
+  }, [API_BASE_URL, API_ROUTES.data, API_ROUTES.count, API_ROUTES.columns]);
 
   useEffect(() => {
     fetchTableData();
