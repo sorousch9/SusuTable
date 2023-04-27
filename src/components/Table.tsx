@@ -21,9 +21,9 @@ type Props = {
   setSelectedColumn: (selectedColumn: string) => void;
   setSearchText: (inputText: string) => void;
   searchText: string;
-  minValue: number | undefined;
+  minValue: number;
   setMinValue: (inputNumber: number) => void;
-  maxValue: number | undefined;
+  maxValue: number;
   setMaxValue: (inputNumber: number) => void;
 };
 const TableFC: FC<Props> = ({
@@ -103,6 +103,8 @@ const TableFC: FC<Props> = ({
                               className="tableInput number"
                               type="number"
                               placeholder="Min number"
+                              min={column.cachedContents.smallest}
+                              max={column.cachedContents.largest}
                               value={
                                 selectedColumn === column.fieldName
                                   ? Number(minValue)
@@ -118,6 +120,8 @@ const TableFC: FC<Props> = ({
                               className="tableInput number"
                               type="number"
                               placeholder="Max number"
+                              min={column.cachedContents.smallest}
+                              max={column.cachedContents.largest}
                               value={
                                 selectedColumn === column.fieldName
                                   ? Number(maxValue)
