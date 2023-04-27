@@ -31,8 +31,8 @@ const App = () => {
   const [totalCount, setTotalCount] = useState<number>(0);
   const [selectedColumn, setSelectedColumn] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
-  const [minValue, setMinValue] = useState<number|undefined>();
-  const [maxValue, setMaxValue] = useState<number|undefined>();
+  const [minValue, setMinValue] = useState<number | undefined>();
+  const [maxValue, setMaxValue] = useState<number | undefined>();
 
   const API_BASE_URL = "https://data.cityofnewyork.us";
   const API_ROUTES = useMemo(() => {
@@ -47,14 +47,22 @@ const App = () => {
       const rangeClause = `&$where=(${selectedColumn} >= ${minValue} AND ${selectedColumn} <= ${maxValue})`;
       route += rangeClause;
       countRoute += rangeClause;
+    } else if (minValue !== undefined) {
+      const rangeClause = `&$where=(${selectedColumn} >= ${minValue})`;
+      route += rangeClause;
+      countRoute += rangeClause;
+    } else if (maxValue !== undefined) {
+      const rangeClause = `&$where=(${selectedColumn} <= ${maxValue})`;
+      route += rangeClause;
+      countRoute += rangeClause;
     }
+    console.log(route);
     return {
       data: route,
       count: countRoute,
       columns: "/api/views/xnfm-u3k5.json",
     };
   }, [currentPage, selectedColumn, searchText, minValue, maxValue]);
-
   const fetchTableData = useCallback(async () => {
     try {
       const [dataResponse, countResponse, columnsResponse] = await Promise.all([

@@ -67,7 +67,7 @@ const TableFC: FC<Props> = ({
   if (endPage < totalPages) {
     pages.push(<Pagination.Ellipsis key="endEllipsis" />);
   }
-  console.log(maxValue);
+
   return (
     <div className="tableSection">
       <Table className="table" responsive striped bordered hover>
