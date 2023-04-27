@@ -21,6 +21,10 @@ type Props = {
   setSelectedColumn: (selectedColumn: string) => void;
   setSearchText: (inputText: string) => void;
   searchText: string;
+  minValue: number | undefined;
+  setMinValue: (inputNumber: number) => void;
+  maxValue: number | undefined;
+  setMaxValue: (inputNumber: number) => void;
 };
 const TableFC: FC<Props> = ({
   columns,
@@ -33,6 +37,10 @@ const TableFC: FC<Props> = ({
   currentPage,
   totalCount,
   PAGE_SIZE,
+  minValue,
+  setMinValue,
+  maxValue,
+  setMaxValue,
 }) => {
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
   const pages = [];
@@ -59,7 +67,7 @@ const TableFC: FC<Props> = ({
   if (endPage < totalPages) {
     pages.push(<Pagination.Ellipsis key="endEllipsis" />);
   }
-
+  console.log(maxValue);
   return (
     <div className="tableSection">
       <Table className="table" responsive striped bordered hover>
@@ -90,20 +98,37 @@ const TableFC: FC<Props> = ({
                             }}
                           />
                         ) : column.dataTypeName === "number" ? (
-                          <input
-                            className="tableInput"
-                            type="number"
-                            placeholder="Enter a number"
-                            value={
-                              selectedColumn === column.fieldName
-                                ? searchText
-                                : ""
-                            }
-                            onChange={(e) => {
-                              setSelectedColumn(column.fieldName);
-                              setSearchText(e.target.value);
-                            }}
-                          />
+                          <div>
+                            <input
+                              className="tableInput number"
+                              type="number"
+                              placeholder="Min number"
+                              value={
+                                selectedColumn === column.fieldName
+                                  ? Number(minValue)
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                setSelectedColumn(column.fieldName);
+                                setMinValue(Number(e.target.value));
+                              }}
+                            />
+                            {" - "}
+                            <input
+                              className="tableInput number"
+                              type="number"
+                              placeholder="Max number"
+                              value={
+                                selectedColumn === column.fieldName
+                                  ? Number(maxValue)
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                setSelectedColumn(column.fieldName);
+                                setMaxValue(Number(e.target.value));
+                              }}
+                            />
+                          </div>
                         ) : column.dataTypeName === "calendar_date" ? (
                           <input
                             className="tableInput"
