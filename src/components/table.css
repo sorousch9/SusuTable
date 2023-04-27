@@ -53,6 +53,9 @@ td {
   outline: none;
   padding: .3rem;
 }
+.number{
+  width: 47%;
+}
 .sortMenuContent {
   font-size: 1rem;
 }
