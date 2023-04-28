@@ -1,55 +1,104 @@
-import { Column } from "../App";
+import { useEffect, useState, useCallback, useMemo, FC } from "react";
 import { OverlayTrigger, Pagination, Table } from "react-bootstrap";
-import { FC, useState } from "react";
 import "./table.css";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import Popover from "react-bootstrap/Popover";
 import { BsSortDownAlt } from "react-icons/bs";
 import { BsSortUp } from "react-icons/bs";
-type Data = {
-  [key: string]: string | number;
-};
+import axios from "axios";
+import { Column, DataRow } from "../../types/Table";
 
-type Props = {
-  columns: Column[];
-  data: Data[];
-  currentPage: number;
-  setCurrentPage: (pageNumber: number) => void;
-  totalCount: number;
-  PAGE_SIZE: number;
-  selectedColumn: string;
-  setSelectedColumn: (selectedColumn: string) => void;
-  setSearchText: (inputText: string) => void;
-  searchText: string;
-  minValue: number;
-  setMinValue: (inputNumber: number) => void;
-  maxValue: number;
-  setMaxValue: (inputNumber: number) => void;
-  startDate: string;
-  endDate: string;
-  setStartDate: (inputData: string) => void;
-  setEndDate: (inputData: string) => void;
-};
-const TableFC: FC<Props> = ({
-  columns,
-  selectedColumn,
-  setSelectedColumn,
-  setSearchText,
-  searchText,
-  data,
-  setCurrentPage,
-  currentPage,
-  totalCount,
-  PAGE_SIZE,
-  minValue,
-  setMinValue,
-  maxValue,
-  setMaxValue,
-  startDate,
-  endDate,
-  setStartDate,
-  setEndDate,
-}) => {
+const PAGE_SIZE = 10;
+const TableFC: FC = () => {
+  const [columns, setColumns] = useState<Column[]>([]);
+  const [data, setData] = useState<DataRow[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [selectedColumn, setSelectedColumn] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>("");
+  const [minValue, setMinValue] = useState<number>(0);
+  const [maxValue, setMaxValue] = useState<number>(0);
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+
+  const API_BASE_URL = "https://data.cityofnewyork.us";
+  const API_ROUTES = useMemo(() => {
+    let dataRoute = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
+    let countRoute = `/id/xnfm-u3k5.json?$select=count(*) as __count_alias__`;
+    // Add search clause if both selectedColumn and searchText exist
+
+    if (selectedColumn && searchText) {
+      const searchClause = `&$where=(upper(${selectedColumn}) LIKE '%25${searchText}%25')`;
+      dataRoute += searchClause;
+      countRoute += searchClause;
+    }
+    // Add range clause if either minValue or maxValue exist
+    if (minValue !== 0 || maxValue !== 0) {
+      let rangeClause = "&$where=(";
+      if (minValue !== 0) {
+        rangeClause += `${selectedColumn} >= ${minValue}`;
+      }
+      if (maxValue !== 0) {
+        if (minValue !== 0) {
+          rangeClause += ` AND `;
+        }
+        rangeClause += `${selectedColumn} <= ${maxValue}`;
+      }
+      rangeClause += ")";
+      dataRoute += rangeClause;
+      countRoute += rangeClause;
+    }
+    // Add date range clause if either startDate or endDate exist
+    if (startDate && endDate) {
+      let dateRangeClause = "&$where=(";
+      if (startDate) {
+        dateRangeClause += `${selectedColumn} >= '${startDate}'`;
+      }
+      if (endDate) {
+        if (startDate) {
+          dateRangeClause += ` AND `;
+        }
+        dateRangeClause += `${selectedColumn} <= '${endDate}'`;
+      }
+      dateRangeClause += ")";
+      dataRoute += dateRangeClause;
+      countRoute += dateRangeClause;
+    }
+
+    return {
+      data: dataRoute,
+      count: countRoute,
+      columns: "/api/views/xnfm-u3k5.json?&$$read_from_nbe=true&$$version=2.1",
+    };
+  }, [
+    currentPage,
+    selectedColumn,
+    searchText,
+    minValue,
+    maxValue,
+    startDate,
+    endDate,
+  ]);
+
+  const fetchTableData = useCallback(async () => {
+    try {
+      const [dataResponse, countResponse, columnsResponse] = await Promise.all([
+        axios.get(`${API_BASE_URL}${API_ROUTES.data}`),
+        axios.get(`${API_BASE_URL}${API_ROUTES.count}`),
+        axios.get(`${API_BASE_URL}${API_ROUTES.columns}`),
+      ]);
+      setData(dataResponse.data);
+      setColumns(columnsResponse.data.columns);
+      setTotalCount(countResponse.data[0].__count_alias__);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [API_BASE_URL, API_ROUTES.data, API_ROUTES.count, API_ROUTES.columns]);
+
+  useEffect(() => {
+    fetchTableData();
+  }, [fetchTableData]);
+
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
   const pages = [];
   const maxPagesToShow = 5;
