@@ -9,7 +9,7 @@ import axios from "axios";
 import { Column, DataRow, Value } from "../../types/Table";
 
 const PAGE_SIZE = 10;
-const TableFC: FC = () => {
+const TableAPI: FC = () => {
   const [columns, setColumns] = useState<Column[]>([]);
   const [data, setData] = useState<DataRow[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -26,13 +26,20 @@ const TableFC: FC = () => {
   const API_ROUTES = useMemo(() => {
     let dataRoute = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
     let countRoute = `/id/xnfm-u3k5.json?$select=count(*) as __count_alias__`;
+    let searchClause = "";
     if (selectedColumn && queryValue.textValue) {
-      const searchClause = `&$where=(upper(${selectedColumn}) LIKE '%25${queryValue.textValue}%25')`;
-      dataRoute += searchClause;
-      countRoute += searchClause;
+      searchClause += `$where=${selectedColumn} LIKE '%25${queryValue.textValue}%25'`;
+      if (
+        queryValue.minValue !== 0 ||
+        queryValue.maxValue !== 0 ||
+        queryValue.startDate ||
+        queryValue.endDate
+      ) {
+        searchClause += " AND ";
+      }
     }
     if (queryValue.minValue !== 0 || queryValue.maxValue !== 0) {
-      let rangeClause = "&$where=(";
+      let rangeClause = "";
       if (queryValue.minValue !== 0) {
         rangeClause += `${selectedColumn} >= ${queryValue.minValue}`;
       }
@@ -42,12 +49,13 @@ const TableFC: FC = () => {
         }
         rangeClause += `${selectedColumn} <= ${queryValue.maxValue}`;
       }
-      rangeClause += ")";
-      dataRoute += rangeClause;
-      countRoute += rangeClause;
+      searchClause += rangeClause;
+      if (queryValue.startDate || queryValue.endDate) {
+        searchClause += " AND ";
+      }
     }
     if (queryValue.startDate && queryValue.endDate) {
-      let dateRangeClause = "&$where=(";
+      let dateRangeClause = "";
       if (queryValue.startDate) {
         dateRangeClause += `${selectedColumn} >= '${queryValue.startDate}'`;
       }
@@ -57,9 +65,13 @@ const TableFC: FC = () => {
         }
         dateRangeClause += `${selectedColumn} <= '${queryValue.endDate}'`;
       }
-      dateRangeClause += ")";
-      dataRoute += dateRangeClause;
-      countRoute += dateRangeClause;
+      searchClause += dateRangeClause;
+    }
+
+    if (searchClause) {
+      searchClause = `&${searchClause}`;
+      dataRoute += searchClause;
+      countRoute += searchClause;
     }
 
     return {
@@ -121,7 +133,6 @@ const TableFC: FC = () => {
     pages.push(<Pagination.Ellipsis key="endEllipsis" />);
   }
 
-  
   const handleChange = (key: keyof Value, value: Value[keyof Value]) => {
     setQueryValue((prevState) => ({ ...prevState, [key]: value }));
   };
@@ -313,4 +324,4 @@ const TableFC: FC = () => {
     </div>
   );
 };
-export default TableFC;
+export default TableAPI;

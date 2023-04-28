@@ -1,5 +1,5 @@
 import "./App.css";
-import TableFC from "./components/Table";
+import TableAPI from "./components/Table";
 import DataSelection from "./components/DataSelection";
 import NavChart from "./components/NavChart";
 import { Container, Col, Row } from "react-bootstrap";
@@ -29,7 +29,7 @@ const App = () => {
         </Col>
       </Row>
       <Row>
-        <TableFC />
+        <TableAPI />
       </Row>
     </Container>
   );
