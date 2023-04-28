@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo, FC } from "react";
+import { useEffect, useState, useMemo, FC } from "react";
 import { OverlayTrigger, Pagination, Table } from "react-bootstrap";
 import "./table.css";
 import { BiDotsVerticalRounded } from "react-icons/bi";
@@ -7,7 +7,13 @@ import { BsSortDownAlt } from "react-icons/bs";
 import { BsSortUp } from "react-icons/bs";
 import axios from "axios";
 import { Column, DataRow } from "../../types/Table";
-
+interface MyState {
+  textValue: string;
+  minValue: number;
+  maxValue: number;
+  startDate: string;
+  endDate: string;
+}
 const PAGE_SIZE = 10;
 const TableFC: FC = () => {
   const [columns, setColumns] = useState<Column[]>([]);
@@ -15,46 +21,47 @@ const TableFC: FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(0);
   const [selectedColumn, setSelectedColumn] = useState<string>("");
-  const [searchText, setSearchText] = useState<string>("");
-  const [minValue, setMinValue] = useState<number>(0);
-  const [maxValue, setMaxValue] = useState<number>(0);
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
-
+  const [queryValue, setQueryValue] = useState<MyState>({
+    textValue: "",
+    minValue: 0,
+    maxValue: 0,
+    startDate: "",
+    endDate: "",
+  });
   const API_BASE_URL = "https://data.cityofnewyork.us";
   const API_ROUTES = useMemo(() => {
     let dataRoute = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
     let countRoute = `/id/xnfm-u3k5.json?$select=count(*) as __count_alias__`;
-    if (selectedColumn && searchText) {
-      const searchClause = `&$where=(upper(${selectedColumn}) LIKE '%25${searchText}%25')`;
+    if (selectedColumn && queryValue.textValue) {
+      const searchClause = `&$where=(upper(${selectedColumn}) LIKE '%25${queryValue.textValue}%25')`;
       dataRoute += searchClause;
       countRoute += searchClause;
     }
-    if (minValue !== 0 || maxValue !== 0) {
+    if (queryValue.minValue !== 0 || queryValue.maxValue !== 0) {
       let rangeClause = "&$where=(";
-      if (minValue !== 0) {
-        rangeClause += `${selectedColumn} >= ${minValue}`;
+      if (queryValue.minValue !== 0) {
+        rangeClause += `${selectedColumn} >= ${queryValue.minValue}`;
       }
-      if (maxValue !== 0) {
-        if (minValue !== 0) {
+      if (queryValue.maxValue !== 0) {
+        if (queryValue.minValue !== 0) {
           rangeClause += ` AND `;
         }
-        rangeClause += `${selectedColumn} <= ${maxValue}`;
+        rangeClause += `${selectedColumn} <= ${queryValue.maxValue}`;
       }
       rangeClause += ")";
       dataRoute += rangeClause;
       countRoute += rangeClause;
     }
-    if (startDate && endDate) {
+    if (queryValue.startDate && queryValue.endDate) {
       let dateRangeClause = "&$where=(";
-      if (startDate) {
-        dateRangeClause += `${selectedColumn} >= '${startDate}'`;
+      if (queryValue.startDate) {
+        dateRangeClause += `${selectedColumn} >= '${queryValue.startDate}'`;
       }
-      if (endDate) {
-        if (startDate) {
+      if (queryValue.endDate) {
+        if (queryValue.startDate) {
           dateRangeClause += ` AND `;
         }
-        dateRangeClause += `${selectedColumn} <= '${endDate}'`;
+        dateRangeClause += `${selectedColumn} <= '${queryValue.endDate}'`;
       }
       dateRangeClause += ")";
       dataRoute += dateRangeClause;
@@ -69,11 +76,11 @@ const TableFC: FC = () => {
   }, [
     currentPage,
     selectedColumn,
-    searchText,
-    minValue,
-    maxValue,
-    startDate,
-    endDate,
+    queryValue.textValue,
+    queryValue.minValue,
+    queryValue.maxValue,
+    queryValue.startDate,
+    queryValue.endDate,
   ]);
   useEffect(() => {
     const fetchTableData = async () => {
@@ -119,7 +126,9 @@ const TableFC: FC = () => {
   if (endPage < totalPages) {
     pages.push(<Pagination.Ellipsis key="endEllipsis" />);
   }
-
+  const handleChange = (key: keyof MyState, value: MyState[keyof MyState]) => {
+    setQueryValue((prevState) => ({ ...prevState, [key]: value }));
+  };
   return (
     <div className="tableSection">
       <Table className="table" responsive striped bordered hover>
@@ -140,12 +149,15 @@ const TableFC: FC = () => {
                             placeholder="Search"
                             value={
                               selectedColumn === column.fieldName
-                                ? searchText
+                                ? queryValue.textValue
                                 : ""
                             }
                             onChange={(e) => {
                               setSelectedColumn(column.fieldName);
-                              setSearchText(e.target.value.toUpperCase());
+                              handleChange(
+                                "textValue",
+                                e.target.value.toUpperCase()
+                              );
                             }}
                           />
                         ) : column.dataTypeName === "number" ? (
@@ -157,12 +169,15 @@ const TableFC: FC = () => {
                               max={column.cachedContents.largest}
                               value={
                                 selectedColumn === column.fieldName
-                                  ? Number(minValue)
+                                  ? Number(queryValue.minValue)
                                   : ""
                               }
                               onChange={(e) => {
                                 setSelectedColumn(column.fieldName);
-                                setMinValue(Number(e.target.value));
+                                handleChange(
+                                  "minValue",
+                                  Number(e.target.value)
+                                );
                               }}
                             />
                             {" - "}
@@ -173,12 +188,15 @@ const TableFC: FC = () => {
                               max={column.cachedContents.largest}
                               value={
                                 selectedColumn === column.fieldName
-                                  ? Number(maxValue)
+                                  ? Number(queryValue.maxValue)
                                   : ""
                               }
                               onChange={(e) => {
                                 setSelectedColumn(column.fieldName);
-                                setMaxValue(Number(e.target.value));
+                                handleChange(
+                                  "maxValue",
+                                  Number(e.target.value)
+                                );
                               }}
                             />
                           </div>
@@ -191,12 +209,12 @@ const TableFC: FC = () => {
                               max={column.cachedContents.largest}
                               value={
                                 selectedColumn === column.fieldName
-                                  ? startDate.toString()
+                                  ? queryValue.startDate.toString()
                                   : ""
                               }
                               onChange={(e) => {
                                 setSelectedColumn(column.fieldName);
-                                setStartDate(e.target.value);
+                                handleChange("startDate", e.target.value);
                               }}
                             />
                             <label>End date:</label>
@@ -206,12 +224,12 @@ const TableFC: FC = () => {
                               max={column.cachedContents.largest}
                               value={
                                 selectedColumn === column.fieldName
-                                  ? endDate.toString()
+                                  ? queryValue.endDate.toString()
                                   : ""
                               }
                               onChange={(e) => {
                                 setSelectedColumn(column.fieldName);
-                                setEndDate(e.target.value);
+                                handleChange("endDate", e.target.value);
                               }}
                             />
                           </div>
