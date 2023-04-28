@@ -14,7 +14,13 @@ const TableAPI: FC = () => {
   const [data, setData] = useState<DataRow[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(0);
-  const [selectedColumn, setSelectedColumn] = useState<string>("");
+  const [selectedColumn, setSelectedColumn] = useState({
+    textValue: "",
+    minValue: "",
+    maxValue: "",
+    startDate: "",
+    endDate: "",
+  });
   const [queryValue, setQueryValue] = useState<Value>({
     textValue: "",
     minValue: 0,
@@ -22,13 +28,14 @@ const TableAPI: FC = () => {
     startDate: "",
     endDate: "",
   });
+
   const API_BASE_URL = "https://data.cityofnewyork.us";
   const API_ROUTES = useMemo(() => {
     let dataRoute = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
     let countRoute = `/id/xnfm-u3k5.json?$select=count(*) as __count_alias__`;
     let searchClause = "";
-    if (selectedColumn && queryValue.textValue) {
-      searchClause += `$where=${selectedColumn} LIKE '%25${queryValue.textValue}%25'`;
+    if (selectedColumn.textValue && queryValue.textValue) {
+      searchClause += `$where=${selectedColumn.textValue} LIKE '%25${queryValue.textValue}%25'`;
       if (
         queryValue.minValue !== 0 ||
         queryValue.maxValue !== 0 ||
@@ -41,13 +48,13 @@ const TableAPI: FC = () => {
     if (queryValue.minValue !== 0 || queryValue.maxValue !== 0) {
       let rangeClause = "";
       if (queryValue.minValue !== 0) {
-        rangeClause += `${selectedColumn} >= ${queryValue.minValue}`;
+        rangeClause += `${selectedColumn.minValue} >= ${queryValue.minValue}`;
       }
       if (queryValue.maxValue !== 0) {
         if (queryValue.minValue !== 0) {
           rangeClause += ` AND `;
         }
-        rangeClause += `${selectedColumn} <= ${queryValue.maxValue}`;
+        rangeClause += `${selectedColumn.maxValue} <= ${queryValue.maxValue}`;
       }
       searchClause += rangeClause;
       if (queryValue.startDate || queryValue.endDate) {
@@ -57,13 +64,13 @@ const TableAPI: FC = () => {
     if (queryValue.startDate && queryValue.endDate) {
       let dateRangeClause = "";
       if (queryValue.startDate) {
-        dateRangeClause += `${selectedColumn} >= '${queryValue.startDate}'`;
+        dateRangeClause += `${selectedColumn.startDate} >= '${queryValue.startDate}'`;
       }
       if (queryValue.endDate) {
         if (queryValue.startDate) {
           dateRangeClause += ` AND `;
         }
-        dateRangeClause += `${selectedColumn} <= '${queryValue.endDate}'`;
+        dateRangeClause += `${selectedColumn.endDate} <= '${queryValue.endDate}'`;
       }
       searchClause += dateRangeClause;
     }
@@ -133,8 +140,11 @@ const TableAPI: FC = () => {
     pages.push(<Pagination.Ellipsis key="endEllipsis" />);
   }
 
-  const handleChange = (key: keyof Value, value: Value[keyof Value]) => {
+  const HandleChangeValue = (key: keyof Value, value: Value[keyof Value]) => {
     setQueryValue((prevState) => ({ ...prevState, [key]: value }));
+  };
+  const HandleChangeColumns = (key: keyof Value, value: Value[keyof Value]) => {
+    setSelectedColumn((prevState) => ({ ...prevState, [key]: value }));
   };
   return (
     <div className="tableSection">
@@ -155,13 +165,16 @@ const TableAPI: FC = () => {
                             type="text"
                             placeholder="Search"
                             value={
-                              selectedColumn === column.fieldName
+                              selectedColumn.textValue === column.fieldName
                                 ? queryValue.textValue
                                 : ""
                             }
                             onChange={(e) => {
-                              setSelectedColumn(column.fieldName);
-                              handleChange(
+                              HandleChangeColumns(
+                                "textValue",
+                                column.fieldName
+                              );
+                              HandleChangeValue(
                                 "textValue",
                                 e.target.value.toUpperCase()
                               );
@@ -175,13 +188,16 @@ const TableAPI: FC = () => {
                               min={column.cachedContents.smallest}
                               max={column.cachedContents.largest}
                               value={
-                                selectedColumn === column.fieldName
+                                selectedColumn.minValue === column.fieldName
                                   ? Number(queryValue.minValue)
                                   : ""
                               }
                               onChange={(e) => {
-                                setSelectedColumn(column.fieldName);
-                                handleChange(
+                                HandleChangeColumns(
+                                  "minValue",
+                                  column.fieldName
+                                );
+                                HandleChangeValue(
                                   "minValue",
                                   Number(e.target.value)
                                 );
@@ -194,13 +210,16 @@ const TableAPI: FC = () => {
                               min={column.cachedContents.smallest}
                               max={column.cachedContents.largest}
                               value={
-                                selectedColumn === column.fieldName
+                                selectedColumn.maxValue === column.fieldName
                                   ? Number(queryValue.maxValue)
                                   : ""
                               }
                               onChange={(e) => {
-                                setSelectedColumn(column.fieldName);
-                                handleChange(
+                                HandleChangeColumns(
+                                  "maxValue",
+                                  column.fieldName
+                                );
+                                HandleChangeValue(
                                   "maxValue",
                                   Number(e.target.value)
                                 );
@@ -215,13 +234,16 @@ const TableAPI: FC = () => {
                               min={column.cachedContents.smallest}
                               max={column.cachedContents.largest}
                               value={
-                                selectedColumn === column.fieldName
+                                selectedColumn.startDate === column.fieldName
                                   ? queryValue.startDate.toString()
                                   : ""
                               }
                               onChange={(e) => {
-                                setSelectedColumn(column.fieldName);
-                                handleChange("startDate", e.target.value);
+                                HandleChangeColumns(
+                                  "startDate",
+                                  column.fieldName
+                                );
+                                HandleChangeValue("startDate", e.target.value);
                               }}
                             />
                             <label>End date:</label>
@@ -230,13 +252,16 @@ const TableAPI: FC = () => {
                               min={column.cachedContents.smallest}
                               max={column.cachedContents.largest}
                               value={
-                                selectedColumn === column.fieldName
+                                selectedColumn.endDate === column.fieldName
                                   ? queryValue.endDate.toString()
                                   : ""
                               }
                               onChange={(e) => {
-                                setSelectedColumn(column.fieldName);
-                                handleChange("endDate", e.target.value);
+                                HandleChangeColumns(
+                                  "endDate",
+                                  column.fieldName
+                                );
+                                HandleChangeValue("endDate", e.target.value);
                               }}
                             />
                           </div>
