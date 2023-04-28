@@ -6,14 +6,8 @@ import Popover from "react-bootstrap/Popover";
 import { BsSortDownAlt } from "react-icons/bs";
 import { BsSortUp } from "react-icons/bs";
 import axios from "axios";
-import { Column, DataRow } from "../../types/Table";
-interface MyState {
-  textValue: string;
-  minValue: number;
-  maxValue: number;
-  startDate: string;
-  endDate: string;
-}
+import { Column, DataRow, Value } from "../../types/Table";
+
 const PAGE_SIZE = 10;
 const TableFC: FC = () => {
   const [columns, setColumns] = useState<Column[]>([]);
@@ -21,7 +15,7 @@ const TableFC: FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(0);
   const [selectedColumn, setSelectedColumn] = useState<string>("");
-  const [queryValue, setQueryValue] = useState<MyState>({
+  const [queryValue, setQueryValue] = useState<Value>({
     textValue: "",
     minValue: 0,
     maxValue: 0,
@@ -126,7 +120,9 @@ const TableFC: FC = () => {
   if (endPage < totalPages) {
     pages.push(<Pagination.Ellipsis key="endEllipsis" />);
   }
-  const handleChange = (key: keyof MyState, value: MyState[keyof MyState]) => {
+
+  
+  const handleChange = (key: keyof Value, value: Value[keyof Value]) => {
     setQueryValue((prevState) => ({ ...prevState, [key]: value }));
   };
   return (
