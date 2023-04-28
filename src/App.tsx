@@ -37,6 +37,8 @@ const App = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [minValue, setMinValue] = useState<number>(0);
   const [maxValue, setMaxValue] = useState<number>(0);
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
 
   const API_BASE_URL = "https://data.cityofnewyork.us";
 
@@ -67,13 +69,29 @@ const App = () => {
       dataRoute += rangeClause;
       countRoute += rangeClause;
     }
+    // Add date range clause if either startDate or endDate exist
+    if (startDate && endDate) {
+      let dateRangeClause = "&$where=(";
+      if (startDate) {
+        dateRangeClause += `${selectedColumn} >= '${startDate}'`;
+      }
+      if (endDate) {
+        if (startDate) {
+          dateRangeClause += ` AND `;
+        }
+        dateRangeClause += `${selectedColumn} <= '${endDate}'`;
+      }
+      dateRangeClause += ")";
+      dataRoute += dateRangeClause;
+      countRoute += dateRangeClause;
+    }
 
     return {
       data: dataRoute,
       count: countRoute,
       columns: "/api/views/xnfm-u3k5.json?&$$read_from_nbe=true&$$version=2.1",
     };
-  }, [currentPage, selectedColumn, searchText, minValue, maxValue]);
+  }, [currentPage, selectedColumn, searchText, minValue, maxValue, startDate, endDate]);
 
   const fetchTableData = useCallback(async () => {
     try {
@@ -127,6 +145,10 @@ const App = () => {
           setMinValue={setMinValue}
           maxValue={maxValue}
           setMaxValue={setMaxValue}
+          startDate={startDate}
+          setEndDate={setEndDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
         />
       </Row>
     </Container>
