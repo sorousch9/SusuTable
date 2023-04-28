@@ -5,9 +5,7 @@ import {
   FcBarChart,
   FcComboChart,
   FcDoughnutChart,
-  FcFlowChart,
   FcLineChart,
-  FcPieChart,
 } from "react-icons/fc";
 import { NavLink } from "react-router-dom";
 import "./navChart.css";

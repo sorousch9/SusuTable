@@ -1,6 +1,6 @@
 import { Column } from "../App";
 import { OverlayTrigger, Pagination, Table } from "react-bootstrap";
-import { FC } from "react";
+import { FC, useState } from "react";
 import "./table.css";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import Popover from "react-bootstrap/Popover";
@@ -25,6 +25,10 @@ type Props = {
   setMinValue: (inputNumber: number) => void;
   maxValue: number;
   setMaxValue: (inputNumber: number) => void;
+  startDate: string;
+  endDate: string;
+  setStartDate: (inputData: string) => void;
+  setEndDate: (inputData: string) => void;
 };
 const TableFC: FC<Props> = ({
   columns,
@@ -41,6 +45,10 @@ const TableFC: FC<Props> = ({
   setMinValue,
   maxValue,
   setMaxValue,
+  startDate,
+  endDate,
+  setStartDate,
+  setEndDate,
 }) => {
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
   const pages = [];
@@ -84,7 +92,6 @@ const TableFC: FC<Props> = ({
                       <Popover.Body as="div">
                         {column.dataTypeName === "text" ? (
                           <input
-                            className="tableInput"
                             type="text"
                             placeholder="Search"
                             value={
@@ -100,7 +107,6 @@ const TableFC: FC<Props> = ({
                         ) : column.dataTypeName === "number" ? (
                           <div>
                             <input
-                              className="tableInput number"
                               type="number"
                               placeholder="Min number"
                               min={column.cachedContents.smallest}
@@ -117,7 +123,6 @@ const TableFC: FC<Props> = ({
                             />
                             {" - "}
                             <input
-                              className="tableInput number"
                               type="number"
                               placeholder="Max number"
                               min={column.cachedContents.smallest}
@@ -134,20 +139,38 @@ const TableFC: FC<Props> = ({
                             />
                           </div>
                         ) : column.dataTypeName === "calendar_date" ? (
-                          <input
-                            className="tableInput"
-                            type="date"
-                            placeholder="Select a date"
-                            value={
-                              selectedColumn === column.fieldName
-                                ? searchText
-                                : ""
-                            }
-                            onChange={(e) => {
-                              setSelectedColumn(column.fieldName);
-                              setSearchText(e.target.value);
-                            }}
-                          />
+                          <div className="date-range-input">
+                            <label>Start date:</label>
+                            <input
+                              type="date"
+                              min={column.cachedContents.smallest}
+                              max={column.cachedContents.largest}
+                              value={
+                                selectedColumn === column.fieldName
+                                  ? startDate.toString()
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                setSelectedColumn(column.fieldName);
+                                setStartDate(e.target.value);
+                              }}
+                            />
+                            <label>End date:</label>
+                            <input
+                              type="date"
+                              min={column.cachedContents.smallest}
+                              max={column.cachedContents.largest}
+                              value={
+                                selectedColumn === column.fieldName
+                                  ? endDate.toString()
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                setSelectedColumn(column.fieldName);
+                                setEndDate(e.target.value);
+                              }}
+                            />
+                          </div>
                         ) : (
                           ""
                         )}
