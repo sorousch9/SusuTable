@@ -11,10 +11,12 @@ import { Column, DataRow, Value } from "../../types/Table";
 const PAGE_SIZE = 10;
 const TableAPI: FC = () => {
   const [columns, setColumns] = useState<Column[]>([]);
+  const [selectedColumn, setSelectedColumn] = useState<string>("");
   const [data, setData] = useState<DataRow[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(0);
-  const [selectedColumn, setSelectedColumn] = useState({
+  const [sortOrder, setSortOrder] = useState<"ASC" | "DESC">("ASC");
+  const [inputSelectedColumn, setInputSelectedColumn] = useState({
     textValue: "",
     minValue: "",
     maxValue: "",
@@ -28,14 +30,16 @@ const TableAPI: FC = () => {
     startDate: "",
     endDate: "",
   });
+  console.log(sortOrder);
+  console.log(selectedColumn);
 
   const API_BASE_URL = "https://data.cityofnewyork.us";
   const API_ROUTES = useMemo(() => {
     let dataRoute = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
     let countRoute = `/id/xnfm-u3k5.json?$select=count(*) as __count_alias__`;
     let searchClause = "";
-    if (selectedColumn.textValue && queryValue.textValue) {
-      searchClause += `$where=${selectedColumn.textValue} LIKE '%25${queryValue.textValue}%25'`;
+    if (inputSelectedColumn.textValue && queryValue.textValue) {
+      searchClause += `$where=${inputSelectedColumn.textValue} LIKE '%25${queryValue.textValue}%25'`;
       if (
         queryValue.minValue !== 0 ||
         queryValue.maxValue !== 0 ||
@@ -48,13 +52,13 @@ const TableAPI: FC = () => {
     if (queryValue.minValue !== 0 || queryValue.maxValue !== 0) {
       let rangeClause = "";
       if (queryValue.minValue !== 0) {
-        rangeClause += `${selectedColumn.minValue} >= ${queryValue.minValue}`;
+        rangeClause += `${inputSelectedColumn.minValue} >= ${queryValue.minValue}`;
       }
       if (queryValue.maxValue !== 0) {
         if (queryValue.minValue !== 0) {
           rangeClause += ` AND `;
         }
-        rangeClause += `${selectedColumn.maxValue} <= ${queryValue.maxValue}`;
+        rangeClause += `${inputSelectedColumn.maxValue} <= ${queryValue.maxValue}`;
       }
       searchClause += rangeClause;
       if (queryValue.startDate || queryValue.endDate) {
@@ -64,15 +68,24 @@ const TableAPI: FC = () => {
     if (queryValue.startDate && queryValue.endDate) {
       let dateRangeClause = "";
       if (queryValue.startDate) {
-        dateRangeClause += `${selectedColumn.startDate} >= '${queryValue.startDate}'`;
+        dateRangeClause += `${inputSelectedColumn.startDate} >= '${queryValue.startDate}'`;
       }
       if (queryValue.endDate) {
         if (queryValue.startDate) {
           dateRangeClause += ` AND `;
         }
-        dateRangeClause += `${selectedColumn.endDate} <= '${queryValue.endDate}'`;
+        dateRangeClause += `${inputSelectedColumn.endDate} <= '${queryValue.endDate}'`;
       }
       searchClause += dateRangeClause;
+    }
+
+    if (searchClause) {
+      searchClause = `&${searchClause}`;
+      dataRoute += searchClause;
+      countRoute += searchClause;
+    }
+    if (selectedColumn) {
+      dataRoute += `&$order=${selectedColumn} ${sortOrder}`;
     }
 
     if (searchClause) {
@@ -89,6 +102,8 @@ const TableAPI: FC = () => {
   }, [
     currentPage,
     selectedColumn,
+    inputSelectedColumn,
+    sortOrder,
     queryValue.textValue,
     queryValue.minValue,
     queryValue.maxValue,
@@ -144,8 +159,9 @@ const TableAPI: FC = () => {
     setQueryValue((prevState) => ({ ...prevState, [key]: value }));
   };
   const HandleChangeColumns = (key: keyof Value, value: Value[keyof Value]) => {
-    setSelectedColumn((prevState) => ({ ...prevState, [key]: value }));
+    setInputSelectedColumn((prevState) => ({ ...prevState, [key]: value }));
   };
+
   return (
     <div className="tableSection">
       <Table className="table" responsive striped bordered hover>
@@ -165,7 +181,7 @@ const TableAPI: FC = () => {
                             type="text"
                             placeholder="Search"
                             value={
-                              selectedColumn.textValue === column.fieldName
+                              inputSelectedColumn.textValue === column.fieldName
                                 ? queryValue.textValue
                                 : ""
                             }
@@ -188,7 +204,8 @@ const TableAPI: FC = () => {
                               min={column.cachedContents.smallest}
                               max={column.cachedContents.largest}
                               value={
-                                selectedColumn.minValue === column.fieldName
+                                inputSelectedColumn.minValue ===
+                                column.fieldName
                                   ? Number(queryValue.minValue)
                                   : ""
                               }
@@ -210,7 +227,8 @@ const TableAPI: FC = () => {
                               min={column.cachedContents.smallest}
                               max={column.cachedContents.largest}
                               value={
-                                selectedColumn.maxValue === column.fieldName
+                                inputSelectedColumn.maxValue ===
+                                column.fieldName
                                   ? Number(queryValue.maxValue)
                                   : ""
                               }
@@ -234,7 +252,8 @@ const TableAPI: FC = () => {
                               min={column.cachedContents.smallest}
                               max={column.cachedContents.largest}
                               value={
-                                selectedColumn.startDate === column.fieldName
+                                inputSelectedColumn.startDate ===
+                                column.fieldName
                                   ? queryValue.startDate.toString()
                                   : ""
                               }
@@ -252,7 +271,7 @@ const TableAPI: FC = () => {
                               min={column.cachedContents.smallest}
                               max={column.cachedContents.largest}
                               value={
-                                selectedColumn.endDate === column.fieldName
+                                inputSelectedColumn.endDate === column.fieldName
                                   ? queryValue.endDate.toString()
                                   : ""
                               }
@@ -268,7 +287,13 @@ const TableAPI: FC = () => {
                         ) : (
                           ""
                         )}
-                        <button className="sortMenuBtn">
+                        <button
+                          className="sortMenuBtn"
+                          onClick={() => {
+                            setSortOrder("ASC");
+                            setSelectedColumn(column.fieldName);
+                          }}
+                        >
                           <span className="sortMenuIco">
                             <BsSortUp size={"1.5rem"} />
                           </span>
@@ -276,7 +301,13 @@ const TableAPI: FC = () => {
                             Sort Ascending
                           </span>
                         </button>
-                        <button className="sortMenuBtn">
+                        <button
+                          className="sortMenuBtn"
+                          onClick={() => {
+                            setSortOrder("DESC");
+                            setSelectedColumn(column.fieldName);
+                          }}
+                        >
                           <BsSortDownAlt size={"1.5rem"} />
                           <span className="sortMenuContent">
                             Sort Decending
