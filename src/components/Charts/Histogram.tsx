@@ -3,7 +3,7 @@ import { VictoryChart, VictoryHistogram } from "victory";
 const Histogram = () => {
   return (
     <div className="charts">
-      <VictoryChart domainPadding={{ x: 20 }}>
+      <VictoryChart >
         <VictoryHistogram
           style={{
             data: { fill: "#c43a31" },
@@ -14,6 +14,9 @@ const Histogram = () => {
             { x: Math.random()},
             { x: Math.random() },
             { x: Math.random()},
+            { x: Math.random() },
+            { x: Math.random() },
+            { x: Math.random() },
             { x: Math.random() },
           ]}
         />

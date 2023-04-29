@@ -1,10 +1,16 @@
 .navContent {
-  border-bottom: 1px solid #bababa;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  margin-top: 1rem;
 }
 .navIcons {
   font-size: 1.7rem;
+  margin: .3rem;
   padding: 10px 10px;
-  border: 0.5px solid #bababa;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+  z-index: 99;
+  border-radius: 5px;
 }
 .navIcons:hover {
   background-color: #ededed;
