@@ -1,0 +1,28 @@
+.accordion {
+  display: flex;
+  flex-direction: column;
+}
+
+.accordion-item {
+  border: 1px solid #ddd;
+}
+
+.accordion-header {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  font-weight: bold;
+}
+
+.accordion-header.active {
+  background-color: #ddd;
+}
+
+.accordion-content {
+  padding: 10px;
+  display: none;
+}
+
+.accordion-content.active {
+  display: block;
+}

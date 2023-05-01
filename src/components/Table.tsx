@@ -30,8 +30,6 @@ const TableAPI: FC = () => {
     startDate: "",
     endDate: "",
   });
-  console.log(sortOrder);
-  console.log(selectedColumn);
 
   const API_BASE_URL = "https://data.cityofnewyork.us";
   const API_ROUTES = useMemo(() => {
