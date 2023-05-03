@@ -22,16 +22,16 @@ const NavChart = () => (
     </OverlayTrigger>
 
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Pie Chart</Tooltip>}>
-      <NavLink to={"/"} className="navIcons d-inline-flex align-items-center">
+      <NavLink
+        to={"/pieChart"}
+        className="navIcons d-inline-flex align-items-center"
+      >
         <FcDoughnutChart />
       </NavLink>
     </OverlayTrigger>
 
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Line Chart</Tooltip>}>
-      <NavLink
-        to={"/lineChart"}
-        className="navIcons d-inline-flex align-items-center"
-      >
+      <NavLink to={"/"} className="navIcons d-inline-flex align-items-center">
         <FcLineChart />
       </NavLink>
     </OverlayTrigger>
