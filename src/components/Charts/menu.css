@@ -1,6 +1,7 @@
 .accordion {
   display: flex;
   flex-direction: column;
+  margin-top: 0.5rem;
 }
 
 .accordion-item {
@@ -10,12 +11,13 @@
 .accordion-header {
   padding: 10px;
   cursor: pointer;
-  background-color: #f9f9f9;
+  background-color: #fa91914a;
   font-weight: bold;
+  text-shadow: 0px 0px 12px white;
 }
 
 .accordion-header.active {
-  background-color: #ddd;
+  background-color: #d9030366;
 }
 
 .accordion-content {

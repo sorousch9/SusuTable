@@ -1,17 +1,42 @@
-import { useState } from "react";
+import React, { Fragment, useEffect, useState, FC } from "react";
 import { TfiHelpAlt } from "react-icons/tfi";
 import "./menu.css";
 import { Form, InputGroup, OverlayTrigger, Tooltip } from "react-bootstrap";
+import axios from "axios";
+import { DataStateProps } from "../../../types/charts";
 
-const Accordion = () => {
+const apiUrl = "https://data.cityofnewyork.us/api/id/xnfm-u3k5.json";
+const Menu: FC<DataStateProps> = ({ setAxlesData }) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [dimension, setDimension] = useState("");
-  const [measure, setMeasure] = useState("");
+  const [dimension, setDimension] = useState("area");
+  const [measure, setMeasure] = useState("count");
 
-  const handleChangeDimension = (event: any) => {
+  useEffect(() => {
+    async function fetchData() {
+      const query = `SELECT \`${dimension}\` AS __dimension_alias__, COUNT(*) AS __measure_alias__ GROUP BY \`${dimension}\` ORDER BY __measure_alias__ DESC NULL LAST LIMIT 1000`;
+      const url = `${apiUrl}?$query=${encodeURIComponent(
+        query
+      )}&$$read_from_nbe=true&$$version=2.1`;
+
+      try {
+        const response = await axios.get(url);
+        setAxlesData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    if (dimension && measure) {
+      fetchData();
+    }
+  }, [dimension, measure, setAxlesData]);
+
+  const handleChangeDimension = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setDimension(event.target.value);
   };
-  const handleChangeMeasure = (event: any) => {
+  const handleChangeMeasure = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setMeasure(event.target.value);
   };
 
@@ -27,53 +52,68 @@ const Accordion = () => {
     {
       title: "Axles",
       content: (
-        <>
-          <OverlayTrigger
-            overlay={
-              <Tooltip>
-                A dimension is a field that orders, groups, or categorizes your
-                data, such as dates and categories. The dimension is often shown
-                on the x-axis or as points on a map.
-              </Tooltip>
-            }
-          >
-            <h4>
-              Dimension <TfiHelpAlt size={"1rem"} />
-            </h4>
-          </OverlayTrigger>
-          <Form>
-            <InputGroup>
-              <Form.Select value={dimension} onChange={handleChangeDimension}>
-                <option value={1}>Date</option>
-              </Form.Select>
-            </InputGroup>
-          </Form>
-        </>
+        <Fragment>
+          <div>
+            <OverlayTrigger
+              placement="left"
+              overlay={
+                <Tooltip>
+                  A dimension is a field that orders, groups, or categorizes
+                  your data, such as dates and categories. The dimension is
+                  often shown on the x-axis or as points on a map.
+                </Tooltip>
+              }
+            >
+              <h4>
+                Dimension <TfiHelpAlt size={"1rem"} />
+              </h4>
+            </OverlayTrigger>
+            <Form>
+              <InputGroup>
+                <Form.Select value={dimension} onChange={handleChangeDimension}>
+                  <option value="area">Area</option>
+                  <option value="borough">Borough</option>
+                  <option value="yearbuilt">Year Built</option>
+                </Form.Select>
+              </InputGroup>
+            </Form>
+          </div>
+
+          <div>
+            <OverlayTrigger
+              placement="left"
+              overlay={
+                <Tooltip>
+                  A measure is a numeric field or the count of rows associated
+                  with the selected dimension.
+                </Tooltip>
+              }
+            >
+              <h4>
+                Measure <TfiHelpAlt size={"1rem"} />
+              </h4>
+            </OverlayTrigger>
+            <Form>
+              <InputGroup>
+                <Form.Select value={measure} onChange={handleChangeMeasure}>
+                  <option value="count">Count</option>
+                  <option value="avgprice">Average Price</option>
+                  <option value="maxprice">Max Price</option>
+                </Form.Select>
+              </InputGroup>
+            </Form>
+          </div>
+        </Fragment>
       ),
     },
     {
       title: "Filters",
       content: (
         <>
-          <OverlayTrigger
-            overlay={
-              <Tooltip>
-                A measure is a numeric field or the count of rows associated
-                with the selected dimension.
-              </Tooltip>
-            }
-          >
-            <h4>
-              Measure <TfiHelpAlt size={"1rem"} />
-            </h4>
-          </OverlayTrigger>
-          <Form>
-            <InputGroup>
-              <Form.Select value={measure} onChange={handleChangeMeasure}>
-                <option value={1}>Community Board</option>
-              </Form.Select>
-            </InputGroup>
-          </Form>
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellat,
+          iusto nesciunt? Iste consequuntur laudantium earum quisquam ut alias
+          ab, odit animi illum officia? Repellendus quasi iure atque in, ipsum
+          iste!
         </>
       ),
     },
@@ -103,4 +143,4 @@ const Accordion = () => {
   );
 };
 
-export default Accordion;
+export default Menu;
