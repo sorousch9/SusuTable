@@ -1,42 +1,33 @@
-import { VictoryChart, VictoryGroup, VictoryStack, VictoryBar } from "victory";
+import { FC } from "react";
+import {
+  BarChart,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  Bar,
+  ResponsiveContainer,
+} from "recharts";
 
-const BarChart = () => {
-  const getBarData = () => {
-    return [1, 2, 3, 4, 5].map(() => {
-      return [
-        { x: 1, y: Math.random() },
-        { x: 2, y: Math.random() },
-        { x: 3, y: Math.random() },
-        { x: 4, y: Math.random() },
-        { x: 5, y: Math.random() },
-        { x: 6, y: Math.random() },
-      ];
-    });
-  };
+import { DataProps } from "../../../types/chartsTypes";
 
+const BarChartE: FC<DataProps> = ({ dataPoints }) => {
   return (
     <div className="charts">
-      <VictoryChart domainPadding={{ x: 50 }} width={400} height={400}>
-        <VictoryGroup offset={20} style={{ data: { width: 15 } }}>
-          <VictoryStack colorScale={"red"}>
-            {getBarData().map((data, index) => {
-              return <VictoryBar key={index} data={data} />;
-            })}
-          </VictoryStack>
-          <VictoryStack colorScale={"green"}>
-            {getBarData().map((data, index) => {
-              return <VictoryBar key={index} data={data} />;
-            })}
-          </VictoryStack>
-          <VictoryStack colorScale={"blue"}>
-            {getBarData().map((data, index) => {
-              return <VictoryBar key={index} data={data} />;
-            })}
-          </VictoryStack>
-        </VictoryGroup>
-      </VictoryChart>
+
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={dataPoints}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="x" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="y" fill="#8884d8" />
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 };
 
-export default BarChart;
+export default BarChartE;
