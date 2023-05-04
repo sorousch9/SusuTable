@@ -9,6 +9,7 @@ import {
 } from "react-icons/fc";
 import { NavLink } from "react-router-dom";
 import "./navChart.css";
+import { BiScatterChart } from "react-icons/bi";
 
 const NavChart = () => (
   <div className="navContent">
@@ -21,6 +22,18 @@ const NavChart = () => (
       </NavLink>
     </OverlayTrigger>
 
+    <OverlayTrigger
+      placement="bottom"
+      overlay={<Tooltip>Scatter Chart </Tooltip>}
+    >
+      <NavLink
+        to={"/scatterChart"}
+        className=" d-inline-flex align-items-center navIcons"
+      >
+        <BiScatterChart />
+      </NavLink>
+    </OverlayTrigger>
+    
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Pie Chart</Tooltip>}>
       <NavLink
         to={"/pieChart"}
