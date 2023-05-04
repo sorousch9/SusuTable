@@ -6,11 +6,10 @@ import Popover from "react-bootstrap/Popover";
 import { BsSortDownAlt } from "react-icons/bs";
 import { BsSortUp } from "react-icons/bs";
 import axios from "axios";
-import { Column, DataRow, Value } from "../../types/Table";
+import { DataRow, PropsStateColumns, Value } from "../../types/tableTypes";
 
 const PAGE_SIZE = 10;
-const TableAPI: FC = () => {
-  const [columns, setColumns] = useState<Column[]>([]);
+const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
   const [selectedColumn, setSelectedColumn] = useState<string>("");
   const [data, setData] = useState<DataRow[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -95,7 +94,6 @@ const TableAPI: FC = () => {
     return {
       data: dataRoute,
       count: countRoute,
-      columns: "/api/views/xnfm-u3k5.json?&$$read_from_nbe=true&$$version=2.1",
     };
   }, [
     currentPage,
@@ -111,14 +109,11 @@ const TableAPI: FC = () => {
   useEffect(() => {
     const fetchTableData = async () => {
       try {
-        const [dataResponse, countResponse, columnsResponse] =
-          await Promise.all([
-            axios.get(`${API_BASE_URL}${API_ROUTES.data}`),
-            axios.get(`${API_BASE_URL}${API_ROUTES.count}`),
-            axios.get(`${API_BASE_URL}${API_ROUTES.columns}`),
-          ]);
+        const [dataResponse, countResponse] = await Promise.all([
+          axios.get(`${API_BASE_URL}${API_ROUTES.data}`),
+          axios.get(`${API_BASE_URL}${API_ROUTES.count}`),
+        ]);
         setData(dataResponse.data);
-        setColumns(columnsResponse.data.columns);
         setTotalCount(countResponse.data[0].__count_alias__);
       } catch (error) {
         console.log(error);
