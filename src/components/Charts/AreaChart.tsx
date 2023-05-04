@@ -1,44 +1,30 @@
-import { VictoryChart, VictoryGroup, VictoryArea } from "victory";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
-const AreaChart = () => {
+import { DataProps } from "../../../types/chartsTypes";
+import { FC } from "react";
+
+const AreaChartE: FC<DataProps> = ({ dataPoints }) => {
   return (
     <div className="charts">
-      <VictoryChart >
-        <VictoryGroup
-          style={{
-            data: { strokeWidth: 3, fillOpacity: 0.4 },
-          }}
-        >
-          <VictoryArea
-            style={{
-              data: { fill: "red", stroke: "red" },
-            }}
-            data={[
-              { x: 1, y: Math.random() },
-              { x: 2, y: Math.random() },
-              { x: 3, y: Math.random() },
-              { x: 4, y: Math.random() },
-              { x: 5, y: Math.random() },
-              { x: 6, y: Math.random() },
-            ]}
-          />
-          <VictoryArea
-            style={{
-              data: { fill: "black", stroke: "gray" },
-            }}
-            data={[
-              { x: 1, y: Math.random() },
-              { x: 2, y: Math.random() },
-              { x: 3, y: Math.random() },
-              { x: 4, y: Math.random() },
-              { x: 5, y: Math.random() },
-              { x: 6, y: Math.random() },
-            ]}
-          />
-        </VictoryGroup>
-      </VictoryChart>
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={dataPoints}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="x" name="X-axis" />
+          <YAxis name="Y-axis" />
+          <Tooltip />
+          <Area type="monotone" dataKey="y" stroke="#8884d8" fill="#8884d8" />
+        </AreaChart>
+      </ResponsiveContainer>
     </div>
   );
 };
 
-export default AreaChart;
+export default AreaChartE;
