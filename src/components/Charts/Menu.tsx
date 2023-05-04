@@ -3,17 +3,17 @@ import { TfiHelpAlt } from "react-icons/tfi";
 import "./menu.css";
 import { Form, InputGroup, OverlayTrigger, Tooltip } from "react-bootstrap";
 import axios from "axios";
-import { DataStateProps } from "../../../types/charts";
+import { DataStateProps } from "../../../types/chartsTypes";
 
 const apiUrl = "https://data.cityofnewyork.us/api/id/xnfm-u3k5.json";
-const Menu: FC<DataStateProps> = ({ setAxlesData }) => {
+const Menu: FC<DataStateProps> = ({ setAxlesData, columns }) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [dimension, setDimension] = useState("area");
-  const [measure, setMeasure] = useState("count");
+  const [dimension, setDimension] = useState("boroughname");
+  const [measure, setMeasure] = useState("communityboard");
 
   useEffect(() => {
     async function fetchData() {
-      const query = `SELECT \`${dimension}\` AS __dimension_alias__, COUNT(*) AS __measure_alias__ GROUP BY \`${dimension}\` ORDER BY __measure_alias__ DESC NULL LAST LIMIT 1000`;
+      const query = `SELECT \`${dimension}\` AS __dimension_alias__, SUM(\`${measure}\`) AS __measure_alias__ GROUP BY \`${dimension}\` ORDER BY __measure_alias__ DESC NULL LAST LIMIT 1000`;
       const url = `${apiUrl}?$query=${encodeURIComponent(
         query
       )}&$$read_from_nbe=true&$$version=2.1`;
@@ -71,9 +71,11 @@ const Menu: FC<DataStateProps> = ({ setAxlesData }) => {
             <Form>
               <InputGroup>
                 <Form.Select value={dimension} onChange={handleChangeDimension}>
-                  <option value="area">Area</option>
-                  <option value="borough">Borough</option>
-                  <option value="yearbuilt">Year Built</option>
+                  {columns.map((col) => (
+                    <option key={col.fieldName} value={col.fieldName}>
+                      {col.name}
+                    </option>
+                  ))}
                 </Form.Select>
               </InputGroup>
             </Form>
@@ -96,9 +98,10 @@ const Menu: FC<DataStateProps> = ({ setAxlesData }) => {
             <Form>
               <InputGroup>
                 <Form.Select value={measure} onChange={handleChangeMeasure}>
-                  <option value="count">Count</option>
-                  <option value="avgprice">Average Price</option>
-                  <option value="maxprice">Max Price</option>
+                  <option value="communityboard">Community Board</option>
+                  <option value="workscheduleprojectlocationid">
+                    Work Schedule Project Location
+                  </option>
                 </Form.Select>
               </InputGroup>
             </Form>
