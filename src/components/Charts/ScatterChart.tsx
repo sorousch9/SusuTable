@@ -19,10 +19,12 @@ function ScatterChartE({ dataPoints }: DataProps) {
           margin={{ top: 20, right: 20, bottom: 10, left: 10 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="x" name="X-axis" unit="unit" />
-          <YAxis dataKey="y" name="Y-axis" unit="unit" />
+          <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+
+          <XAxis dataKey="dimension" name="X-axis"  />
+          <YAxis dataKey="measure" name="Y-axis"  />
           <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-          <Scatter name="Data" data={dataPoints} fill="#8884d8" />
+          <Scatter  data={dataPoints} fill="#8884d8"  shape="cross"/>
         </ScatterChart>
       </ResponsiveContainer>
     </div>

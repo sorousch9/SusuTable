@@ -1,42 +1,59 @@
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { PieChart, Pie, ResponsiveContainer, Cell } from "recharts";
 import { DataProps } from "../../../types/chartsTypes";
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#45643F"];
 
+const RADIAN = Math.PI / 180;
+const renderCustomizedLabel = ({
+  cx,
+  cy,
+  midAngle,
+  innerRadius,
+  outerRadius,
+  percent,
+  index,
+}: any) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor={x > cx ? "start" : "end"}
+      dominantBaseline="central"
+    >
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
 function PeiChartE({ dataPoints }: DataProps) {
   return (
     <div className="charts">
       <ResponsiveContainer width="100%" height="100%">
-        <PieChart >
+        <PieChart>
           <Pie
-            dataKey="y"
-            isAnimationActive={true}
-            data={dataPoints.slice(1,9)}
-            
-            outerRadius={100}
+            data={dataPoints.slice(0, 9)}
+     
+            labelLine={false}
+            label={renderCustomizedLabel}
+            outerRadius={180}
+            innerRadius={60}
             fill="#8884d8"
-            label
+            dataKey="measure"
           >
-            {dataPoints.map((entry, x) => (
+            {dataPoints.map((entry, index) => (
               <Cell
-                key={`cell-${x}`}
-                fill={COLORS[x % COLORS.length]}
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
               />
             ))}
           </Pie>
-          <Tooltip />
-          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </div>
   );
 }
-
 export default PeiChartE;
