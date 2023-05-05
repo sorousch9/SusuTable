@@ -20,8 +20,8 @@ const Charts: FC<PropsColumns> = ({ columns }) => {
         __dimension_alias__ && __measure_alias__
     )
     .map(({ __dimension_alias__, __measure_alias__ }) => ({
-      x: String(__dimension_alias__),
-      y: Number(__measure_alias__),
+      dimension: String(__dimension_alias__),
+      measure: Number(__measure_alias__),
     }));
   return (
     <Container>
@@ -33,7 +33,7 @@ const Charts: FC<PropsColumns> = ({ columns }) => {
               path="/pieChart"
               element={<PeiChartE dataPoints={dataPoints} />}
             />
-             <Route
+            <Route
               path="/scatterChart"
               element={<ScatterChartE dataPoints={dataPoints} />}
             />
