@@ -1,46 +1,44 @@
-# Getting Started with Create React App
+# Susu Table
+Susu Table is a web application built with React and TypeScript that displays data from [insert data source here] using the Socrata Open Data API (SODA). The app features a dynamic table with sorting, filtering, and pagination capabilities, as well as charts for visualizing the data.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Installation
+To install Susu Table, follow these steps:
 
-## Available Scripts
+1-Clone the repository to your local machine using
+<pre><code> git clone https://github.com/sorousch9/SusuTable.git</code></pre>
 
-In the project directory, you can run:
+2-Install dependencies by running
+ <pre><code>npm install</code></pre>
 
-### `npm start`
+## Usage
+To start the app, run the following command:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+`npm start`
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The app will be available at http://localhost:3000.
 
-### `npm test`
+Navigate to http://localhost:3000 in your web browser
+Features
+Susu Table includes the following features:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Dynamic table with sorting, filtering, and pagination capabilities
+Charts for visualizing the data
+Integration with the Socrata Open Data API (SODA)
+Responsive design for mobile and desktop devices
+Built with React and TypeScript for robust, scalable code
+API Documentation
 
-### `npm run build`
+For more information on using the SODA API, refer to the <a href="https://dev.socrata.com/">official documentation.</a>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Contributing
+If you'd like to contribute to Susu Table, please follow these steps:
+Fork the repository
+Create a new branch for your feature or bugfix
+Make your changes and commit them
+Push your changes to your fork
+Create a pull request
+Credits
+Susu Table was created by [Your Name]. Special thanks to the Socrata team for providing the SODA API and to the React and TypeScript communities for their excellent tools and resources.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+License
+Susu Table is licensed under the MIT License.
