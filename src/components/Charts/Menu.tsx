@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState, FC } from "react";
+import React, { useEffect, useState } from "react";
 import { TfiHelpAlt } from "react-icons/tfi";
 import "./menu.css";
 import { Form, InputGroup, OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -6,8 +6,9 @@ import axios from "axios";
 import { DataStateProps } from "../../../types/chartsTypes";
 
 const apiUrl = "https://data.cityofnewyork.us/api/id/xnfm-u3k5.json";
-const Menu: FC<DataStateProps> = ({ setAxlesData, columns }) => {
-  const [activeIndex, setActiveIndex] = useState<number>(0);
+
+function Menu({ setAxlesData, columns }: DataStateProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
   const [dimension, setDimension] = useState("boroughname");
   const [measure, setMeasure] = useState("communityboard");
 
@@ -36,23 +37,20 @@ const Menu: FC<DataStateProps> = ({ setAxlesData, columns }) => {
   ) => {
     setDimension(event.target.value);
   };
+
   const handleChangeMeasure = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setMeasure(event.target.value);
   };
 
   const handleClick = (index: number) => {
-    if (activeIndex === index) {
-      setActiveIndex(0);
-    } else {
-      setActiveIndex(index);
-    }
+    setActiveIndex((prevIndex) => (prevIndex === index ? 0 : index));
   };
 
   const items = [
     {
       title: "Axles",
       content: (
-        <Fragment>
+        <>
           <div>
             <OverlayTrigger
               placement="left"
@@ -106,7 +104,7 @@ const Menu: FC<DataStateProps> = ({ setAxlesData, columns }) => {
               </InputGroup>
             </Form>
           </div>
-        </Fragment>
+        </>
       ),
     },
     {
@@ -144,6 +142,6 @@ const Menu: FC<DataStateProps> = ({ setAxlesData, columns }) => {
       ))}
     </div>
   );
-};
+}
 
 export default Menu;
