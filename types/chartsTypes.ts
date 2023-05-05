@@ -9,8 +9,8 @@ export type DataStateProps = {
   columns: Column[];
 };
 export interface ChartDataPoint {
-  x: string | number;
-  y: number;
+  dimension: string | number;
+  measure: number;
 }
 export type DataProps = {
   dataPoints: ChartDataPoint[];
