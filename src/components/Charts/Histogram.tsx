@@ -16,8 +16,6 @@ const Histogram: FC<DataProps> = ({ dataPoints }) => {
     <div className="charts">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart
-          width={500}
-          height={400}
           data={dataPoints}
           margin={{
             top: 20,
@@ -30,7 +28,7 @@ const Histogram: FC<DataProps> = ({ dataPoints }) => {
           <XAxis dataKey="dimension" />
           <YAxis dataKey="measure" />
           <Tooltip />
-          <Bar dataKey="measure" fill="#8884d8" barSize={20}/>
+          <Bar dataKey="measure" fill="#1399d8" barSize={20}/>
           <Line
             type="linearClosed"
             dataKey="measure"

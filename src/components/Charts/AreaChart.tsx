@@ -15,12 +15,25 @@ const AreaChartE: FC<DataProps> = ({ dataPoints }) => {
   return (
     <div className="charts">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={dataPoints}>
+        <AreaChart
+          data={dataPoints}
+          margin={{
+            top: 20,
+            right: 20,
+            bottom: 20,
+            left: 20,
+          }}
+        >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="dimension" name="X-axis" />
           <YAxis name="Y-axis" />
           <Tooltip />
-          <Area type="monotone" dataKey="measure" stroke="#8884d8" fill="#8884d8" />
+          <Area
+            type="monotone"
+            dataKey="measure"
+            stroke="#8884d8"
+            fill="#8884d8"
+          />
         </AreaChart>
       </ResponsiveContainer>
     </div>
