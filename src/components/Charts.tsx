@@ -26,8 +26,10 @@ const Charts: FC<PropsColumns> = ({ columns }) => {
   return (
     <Container>
       <Row>
-        <Col xs={9}>
+        <Col xs={1}>
           <NavChart />
+        </Col>
+        <Col xs={8}>
           <Routes>
             <Route
               path="/pieChart"
