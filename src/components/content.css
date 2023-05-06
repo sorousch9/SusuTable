@@ -1,0 +1,23 @@
+.navContent {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.navIcon {
+  display: block;
+  margin: 10px auto;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.navIcon:hover {
+  transform: scale(1.2);
+  filter: drop-shadow(5px 10px 10px #959595);
+}
+.contentItem {
+  height: 50vh;
+}

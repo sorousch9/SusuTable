@@ -1,10 +1,10 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import TableAPI from "./components/Table";
-import Charts from "./components/Charts";
 import { Container, Row } from "react-bootstrap";
 import axios from "axios";
 import { Column } from "../types/tableTypes";
+import Content from "./components/Content";
 
 const App = () => {
   const [columns, setColumns] = useState<Column[]>([]);
@@ -22,7 +22,7 @@ const App = () => {
   return (
     <Container fluid>
       <Row>
-        <Charts columns={columns} />
+        <Content columns={columns} />
       </Row>
       <Row>
         <TableAPI columns={columns} setColumns={setColumns} />
