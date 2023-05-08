@@ -36,7 +36,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     let countRoute = `/id/xnfm-u3k5.json?$select=count(*) as __count_alias__`;
     let searchClause = "";
     if (inputSelectedColumn.textValue && queryValue.textValue) {
-      searchClause += `$where=${inputSelectedColumn.textValue} LIKE '%25${queryValue.textValue}%25'`;
+      searchClause += `$where=(upper(%60${inputSelectedColumn.textValue}%60) LIKE '%25${queryValue.textValue}%25')`;
       if (
         queryValue.minValue !== 0 ||
         queryValue.maxValue !== 0 ||
@@ -83,12 +83,6 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     }
     if (selectedColumn) {
       dataRoute += `&$order=${selectedColumn} ${sortOrder}`;
-    }
-
-    if (searchClause) {
-      searchClause = `&${searchClause}`;
-      dataRoute += searchClause;
-      countRoute += searchClause;
     }
 
     return {
