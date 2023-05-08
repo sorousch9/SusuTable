@@ -34,7 +34,6 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     let dataRoute = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
     let countRoute = `/id/xnfm-u3k5.json?$select=count(*) as __count_alias__`;
 
-   
     let searchClause = "$where=";
     let rangeClause = "";
     let dateRangeClause = "";
@@ -67,7 +66,8 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
         searchClause += " AND ";
       }
     }
-    if (queryValue.startDate && queryValue.endDate) {
+
+    if (queryValue.startDate || queryValue.endDate) {
       if (queryValue.startDate) {
         dateRangeClause += `${inputSelectedColumn.startDate} >= '${queryValue.startDate}'`;
       }
@@ -77,6 +77,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
         }
         dateRangeClause += `${inputSelectedColumn.endDate} <= '${queryValue.endDate}'`;
       }
+
       searchClause += dateRangeClause;
     }
 
