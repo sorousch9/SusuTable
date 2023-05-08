@@ -29,14 +29,18 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     startDate: "",
     endDate: "",
   });
-
   const API_BASE_URL = "https://data.cityofnewyork.us";
   const API_ROUTES = useMemo(() => {
     let dataRoute = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
     let countRoute = `/id/xnfm-u3k5.json?$select=count(*) as __count_alias__`;
-    let searchClause = "";
+
+   
+    let searchClause = "$where=";
+    let rangeClause = "";
+    let dateRangeClause = "";
+
     if (inputSelectedColumn.textValue && queryValue.textValue) {
-      searchClause += `$where=(upper(%60${inputSelectedColumn.textValue}%60) LIKE '%25${queryValue.textValue}%25')`;
+      searchClause += `(upper(%60${inputSelectedColumn.textValue}%60) LIKE '%25${queryValue.textValue}%25')`;
       if (
         queryValue.minValue !== 0 ||
         queryValue.maxValue !== 0 ||
@@ -46,8 +50,8 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
         searchClause += " AND ";
       }
     }
+
     if (queryValue.minValue !== 0 || queryValue.maxValue !== 0) {
-      let rangeClause = "";
       if (queryValue.minValue !== 0) {
         rangeClause += `${inputSelectedColumn.minValue} >= ${queryValue.minValue}`;
       }
@@ -57,13 +61,13 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
         }
         rangeClause += `${inputSelectedColumn.maxValue} <= ${queryValue.maxValue}`;
       }
+
       searchClause += rangeClause;
       if (queryValue.startDate || queryValue.endDate) {
         searchClause += " AND ";
       }
     }
     if (queryValue.startDate && queryValue.endDate) {
-      let dateRangeClause = "";
       if (queryValue.startDate) {
         dateRangeClause += `${inputSelectedColumn.startDate} >= '${queryValue.startDate}'`;
       }
