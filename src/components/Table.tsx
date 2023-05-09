@@ -32,9 +32,9 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
   console.log(sortOrder);
   console.log(selectedColumn);
 
-  function updateOrder(fv: string, sv: "ASC" | "DESC") {
-    setSelectedColumn(fv);
-    setSortOrder(sv);
+  function updateOrder(selectedColumn: string, sortOrder: "ASC" | "DESC") {
+    setSelectedColumn(selectedColumn);
+    setSortOrder(sortOrder);
     return;
   }
   const API_BASE_URL = "https://data.cityofnewyork.us";
