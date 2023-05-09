@@ -1,12 +1,13 @@
 import { useEffect, useState, useMemo, FC } from "react";
-import { OverlayTrigger, Pagination, Table } from "react-bootstrap";
+import { OverlayTrigger, Table } from "react-bootstrap";
 import "./table.css";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import Popover from "react-bootstrap/Popover";
 import { BsSortDownAlt } from "react-icons/bs";
 import { BsSortUp } from "react-icons/bs";
 import axios from "axios";
-import { DataRow, PropsStateColumns, Value } from "../../types/tableTypes";
+import { DataRow, PropsStateColumns, Value } from "../../../types/tableTypes";
+import PaginationTable from "./Pagination";
 
 const PAGE_SIZE = 10;
 const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
@@ -135,39 +136,14 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     fetchTableData();
   }, [API_ROUTES, sortOrder]);
 
-  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
-  const pages = [];
-  const maxPagesToShow = 5;
-  const startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
-  const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-
-  for (let i = startPage; i <= endPage; i++) {
-    pages.push(
-      <Pagination.Item
-        key={i}
-        active={i === currentPage}
-        onClick={() => setCurrentPage(i)}
-      >
-        {i}
-      </Pagination.Item>
-    );
-  }
-
-  if (startPage > 1) {
-    pages.unshift(<Pagination.Ellipsis key="startEllipsis" />);
-  }
-
-  if (endPage < totalPages) {
-    pages.push(<Pagination.Ellipsis key="endEllipsis" />);
-  }
-
   const HandleChangeValue = (key: keyof Value, value: Value[keyof Value]) => {
     setQueryValue((prevState) => ({ ...prevState, [key]: value }));
   };
   const HandleChangeColumns = (key: keyof Value, value: Value[keyof Value]) => {
     setInputSelectedColumn((prevState) => ({ ...prevState, [key]: value }));
   };
-
+  
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
   return (
     <div className="tableSection">
       <Table className="table" responsive striped bordered hover>
@@ -355,32 +331,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
           ))}
         </tbody>
       </Table>
-      <Pagination className="justify-content-center">
-        <Pagination.First
-          onClick={() => setCurrentPage(1)}
-          disabled={currentPage === 1}
-        />
-        <Pagination.Prev
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        />
-        {pages}
-        <Pagination.Item
-          key={totalPages}
-          active={currentPage === totalPages}
-          onClick={() => setCurrentPage(totalPages)}
-        >
-          {totalPages}
-        </Pagination.Item>
-        <Pagination.Next
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        />
-        <Pagination.Last
-          onClick={() => setCurrentPage(totalPages)}
-          disabled={currentPage === totalPages}
-        />
-      </Pagination>
+      <PaginationTable totalPages={totalPages} currentPage={currentPage}  setCurrentPage={setCurrentPage}/>
     </div>
   );
 };

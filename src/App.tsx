@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import TableAPI from "./components/Table";
+import TableAPI from "./components/Table/Table";
 import { Container, Row } from "react-bootstrap";
 import axios from "axios";
 import { Column } from "../types/tableTypes";
