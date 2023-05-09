@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { TfiHelpAlt } from "react-icons/tfi";
 import "./menu.css";
 import { Form, InputGroup, OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -13,7 +13,7 @@ function Menu({ setAxlesData, columns }: DataStateProps) {
   const [measure, setMeasure] = useState("communityboard");
   useEffect(() => {
     async function fetchData() {
-      const query = `SELECT \`${dimension}\` AS __dimension_alias__, SUM(\`${measure}\`) AS __measure_alias__ GROUP BY \`${dimension}\` ORDER BY __measure_alias__ DESC NULL LAST LIMIT 1000`;
+      const query = `SELECT \`${dimension}\` AS __dimension_alias__, SUM(\`${measure}\`) AS __measure_alias__ GROUP BY \`${dimension}\` ORDER BY __dimension_alias__ DESC NULL LAST LIMIT 1000`;
       const url = `${apiUrl}?$query=${encodeURIComponent(
         query
       )}&$$read_from_nbe=true&$$version=2.1`;
@@ -96,13 +96,13 @@ function Menu({ setAxlesData, columns }: DataStateProps) {
               <InputGroup>
                 <Form.Select value={measure} onChange={handleChangeMeasure}>
                   {columns.map((column) => (
-                    <>
+                    <Fragment key={column.fieldName}>
                       {column.dataTypeName === "number" ? (
                         <option value={column.fieldName}>{column.name}</option>
                       ) : (
                         ""
                       )}
-                    </>
+                    </Fragment>
                   ))}
                 </Form.Select>
               </InputGroup>

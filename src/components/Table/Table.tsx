@@ -11,11 +11,11 @@ import PaginationTable from "./Pagination";
 
 const PAGE_SIZE = 10;
 const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
-  const [selectedColumn, setSelectedColumn] = useState<string>("date");
+  const [selectedColumn, setSelectedColumn] = useState<string>("");
   const [data, setData] = useState<DataRow[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(0);
-  const [sortOrder, setSortOrder] = useState<"ASC" | "DESC">("ASC");
+  const [sortOrder, setSortOrder] = useState<"ASC" | "DESC" | string>("");
   const [inputSelectedColumn, setInputSelectedColumn] = useState({
     textValue: "",
     minValue: "",
@@ -38,7 +38,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
 
   const API_BASE_URL = "https://data.cityofnewyork.us";
   const API_ROUTES = useMemo(() => {
-    let dataRoute = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
+    let dataRoute = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}&$order=${selectedColumn} ${sortOrder}`;
     let countRoute = `/id/xnfm-u3k5.json?$select=count(*) as __count_alias__`;
 
     let searchClause = "$where=";
@@ -90,7 +90,6 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
         dateRangeClause += `${inputSelectedColumn.endDate} <= '${queryValue.endDate}'`;
         handleSortChange(inputSelectedColumn.endDate, "DESC");
       }
-
       searchClause += dateRangeClause;
     }
 
@@ -99,9 +98,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
       dataRoute += searchClause;
       countRoute += searchClause;
     }
-    if (selectedColumn) {
-      dataRoute += `&$order=${selectedColumn} ${sortOrder}`;
-    }
+
     return {
       data: dataRoute,
       count: countRoute,

@@ -26,7 +26,7 @@ const Histogram: FC<DataProps> = ({ dataPoints }) => {
         <Tooltip />
         <Bar dataKey="measure" fill="#d9dad7" barSize={20} />
         <Line
-          type="linearClosed"
+          type="step"
           dataKey="measure"
           stroke="#c24d2c"
           activeDot={{ r: 8 }}
