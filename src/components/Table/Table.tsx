@@ -30,14 +30,12 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     startDate: "",
     endDate: "",
   });
-  console.log(sortOrder);
-  console.log(selectedColumn);
 
-  function updateOrder(selectedColumn: string, sortOrder: "ASC" | "DESC") {
-    setSelectedColumn(selectedColumn);
-    setSortOrder(sortOrder);
-    return;
+  function handleSortChange(columnName: string, newSortOrder: "ASC" | "DESC") {
+    setSelectedColumn(columnName);
+    setSortOrder(newSortOrder);
   }
+
   const API_BASE_URL = "https://data.cityofnewyork.us";
   const API_ROUTES = useMemo(() => {
     let dataRoute = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
@@ -49,7 +47,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     let dateRangeClause = "";
     if (inputSelectedColumn.textValue && queryValue.textValue) {
       searchClause += `(upper(%60${inputSelectedColumn.textValue}%60) LIKE '%25${queryValue.textValue}%25') `;
-      updateOrder(inputSelectedColumn.textValue, "ASC");
+      handleSortChange(inputSelectedColumn.textValue, "ASC");
       if (
         queryValue.minValue !== 0 ||
         queryValue.maxValue !== 0 ||
@@ -63,7 +61,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     if (queryValue.minValue !== 0 || queryValue.maxValue !== 0) {
       if (queryValue.minValue !== 0) {
         rangeClause += `${inputSelectedColumn.minValue} >= ${queryValue.minValue}`;
-        updateOrder(inputSelectedColumn.minValue, "ASC");
+        handleSortChange(inputSelectedColumn.minValue, "ASC");
       }
       if (queryValue.maxValue !== 0) {
         if (queryValue.minValue !== 0) {
@@ -71,7 +69,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
         }
         rangeClause += `${inputSelectedColumn.maxValue} <= ${queryValue.maxValue}`;
 
-        updateOrder(inputSelectedColumn.maxValue, "DESC");
+        handleSortChange(inputSelectedColumn.maxValue, "DESC");
       }
 
       searchClause += rangeClause;
@@ -83,14 +81,14 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     if (queryValue.startDate || queryValue.endDate) {
       if (queryValue.startDate) {
         dateRangeClause += `${inputSelectedColumn.startDate} >= '${queryValue.startDate}'`;
-        updateOrder(inputSelectedColumn.startDate, "ASC");
+        handleSortChange(inputSelectedColumn.startDate, "ASC");
       }
       if (queryValue.endDate) {
         if (queryValue.startDate) {
           dateRangeClause += ` AND `;
         }
         dateRangeClause += `${inputSelectedColumn.endDate} <= '${queryValue.endDate}'`;
-        updateOrder(inputSelectedColumn.endDate, "DESC");
+        handleSortChange(inputSelectedColumn.endDate, "DESC");
       }
 
       searchClause += dateRangeClause;
@@ -142,7 +140,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
   const HandleChangeColumns = (key: keyof Value, value: Value[keyof Value]) => {
     setInputSelectedColumn((prevState) => ({ ...prevState, [key]: value }));
   };
-  
+
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
   return (
     <div className="tableSection">
@@ -272,7 +270,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
                         <button
                           className="sortMenuBtn"
                           onClick={() => {
-                            updateOrder(column.fieldName, "ASC");
+                            handleSortChange(column.fieldName, "ASC");
                           }}
                         >
                           <span className="sortMenuIco">
@@ -285,7 +283,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
                         <button
                           className="sortMenuBtn"
                           onClick={() => {
-                            updateOrder(column.fieldName, "DESC");
+                            handleSortChange(column.fieldName, "DESC");
                           }}
                         >
                           <BsSortDownAlt size={"1.5rem"} />
@@ -331,7 +329,11 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
           ))}
         </tbody>
       </Table>
-      <PaginationTable totalPages={totalPages} currentPage={currentPage}  setCurrentPage={setCurrentPage}/>
+      <PaginationTable
+        totalPages={totalPages}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 };
