@@ -11,7 +11,6 @@ function Menu({ setAxlesData, columns }: DataStateProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [dimension, setDimension] = useState("boroughname");
   const [measure, setMeasure] = useState("communityboard");
-
   useEffect(() => {
     async function fetchData() {
       const query = `SELECT \`${dimension}\` AS __dimension_alias__, SUM(\`${measure}\`) AS __measure_alias__ GROUP BY \`${dimension}\` ORDER BY __measure_alias__ DESC NULL LAST LIMIT 1000`;
@@ -96,10 +95,15 @@ function Menu({ setAxlesData, columns }: DataStateProps) {
             <Form>
               <InputGroup>
                 <Form.Select value={measure} onChange={handleChangeMeasure}>
-                  <option value="communityboard">Community Board</option>
-                  <option value="workscheduleprojectlocationid">
-                    Work Schedule Project Location
-                  </option>
+                  {columns.map((column) => (
+                    <>
+                      {column.dataTypeName === "number" ? (
+                        <option value={column.fieldName}>{column.name}</option>
+                      ) : (
+                        ""
+                      )}
+                    </>
+                  ))}
                 </Form.Select>
               </InputGroup>
             </Form>
