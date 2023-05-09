@@ -1,4 +1,6 @@
 # <a href="https://tabletv.netlify.app/">Susu Table</a>
+<p>Click on the readme name to view this table online !</p>
+
 
 <a href="https://tabletv.netlify.app/">Susu Table</a> is a web application built with React and TypeScript that displays data from [insert data source here] using the Socrata Open Data API (SODA). The app features a dynamic table with sorting, filtering, and pagination capabilities, as well as charts for visualizing the data.
 

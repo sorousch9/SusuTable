@@ -3,11 +3,18 @@ import { TfiHelpAlt } from "react-icons/tfi";
 import "./menu.css";
 import { Form, InputGroup, OverlayTrigger, Tooltip } from "react-bootstrap";
 import axios from "axios";
-import { DataStateProps } from "../../../types/chartsTypes";
+import { Column } from "../../../types/tableTypes";
 
+interface DataItem {
+  [key: string]: string | number ;
+}
+interface PropsMenu {
+  columns: Column[];
+  setAxlesData: React.Dispatch<React.SetStateAction<DataItem[]>>;
+}
 const apiUrl = "https://data.cityofnewyork.us/api/id/xnfm-u3k5.json";
 
-function Menu({ setAxlesData, columns }: DataStateProps) {
+function Menu({ columns, setAxlesData }: PropsMenu) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [dimension, setDimension] = useState("boroughname");
   const [measure, setMeasure] = useState("communityboard");

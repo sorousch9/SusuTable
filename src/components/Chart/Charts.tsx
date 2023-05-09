@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import { Route, Routes } from "react-router-dom";
 import NavChart from "./NavChart";
 import Menu from "./Menu";
-import { ChartDataPoint, DataItem } from "../../../types/chartsTypes";
+import { ChartDataPoint } from "../../../types/chartsTypes";
 import { PropsColumns } from "../../../types/tableTypes";
 import PeiChartE from "./Charts/PieChart";
 import ScatterChartE from "./Charts/ScatterChart";
@@ -11,7 +11,9 @@ import LineChartE from "./Charts/LineChart";
 import AreaChartE from "./Charts/AreaChart";
 import BarChartE from "./Charts/BarChart";
 import Histogram from "./Charts/Histogram";
-
+interface DataItem {
+  [key: string]: string | number;
+}
 const Charts: FC<PropsColumns> = ({ columns }) => {
   const [axlesData, setAxlesData] = useState<DataItem[]>([]);
   const dataPoints: ChartDataPoint[] = axlesData
