@@ -10,7 +10,7 @@ import { DataRow, PropsStateColumns, Value } from "../../types/tableTypes";
 
 const PAGE_SIZE = 10;
 const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
-  const [selectedColumn, setSelectedColumn] = useState<string>("");
+  const [selectedColumn, setSelectedColumn] = useState<string>("date");
   const [data, setData] = useState<DataRow[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(0);
@@ -29,6 +29,14 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     startDate: "",
     endDate: "",
   });
+  console.log(sortOrder);
+  console.log(selectedColumn);
+
+  function updateOrder(fv: string, sv: "ASC" | "DESC") {
+    setSelectedColumn(fv);
+    setSortOrder(sv);
+    return;
+  }
   const API_BASE_URL = "https://data.cityofnewyork.us";
   const API_ROUTES = useMemo(() => {
     let dataRoute = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}`;
@@ -36,10 +44,11 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
 
     let searchClause = "$where=";
     let rangeClause = "";
-    let dateRangeClause = "";
 
+    let dateRangeClause = "";
     if (inputSelectedColumn.textValue && queryValue.textValue) {
-      searchClause += `(upper(%60${inputSelectedColumn.textValue}%60) LIKE '%25${queryValue.textValue}%25')`;
+      searchClause += `(upper(%60${inputSelectedColumn.textValue}%60) LIKE '%25${queryValue.textValue}%25') `;
+      updateOrder(inputSelectedColumn.textValue, "ASC");
       if (
         queryValue.minValue !== 0 ||
         queryValue.maxValue !== 0 ||
@@ -53,12 +62,15 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     if (queryValue.minValue !== 0 || queryValue.maxValue !== 0) {
       if (queryValue.minValue !== 0) {
         rangeClause += `${inputSelectedColumn.minValue} >= ${queryValue.minValue}`;
+        updateOrder(inputSelectedColumn.minValue, "ASC");
       }
       if (queryValue.maxValue !== 0) {
         if (queryValue.minValue !== 0) {
           rangeClause += ` AND `;
         }
         rangeClause += `${inputSelectedColumn.maxValue} <= ${queryValue.maxValue}`;
+
+        updateOrder(inputSelectedColumn.maxValue, "DESC");
       }
 
       searchClause += rangeClause;
@@ -70,12 +82,14 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     if (queryValue.startDate || queryValue.endDate) {
       if (queryValue.startDate) {
         dateRangeClause += `${inputSelectedColumn.startDate} >= '${queryValue.startDate}'`;
+        updateOrder(inputSelectedColumn.startDate, "ASC");
       }
       if (queryValue.endDate) {
         if (queryValue.startDate) {
           dateRangeClause += ` AND `;
         }
         dateRangeClause += `${inputSelectedColumn.endDate} <= '${queryValue.endDate}'`;
+        updateOrder(inputSelectedColumn.endDate, "DESC");
       }
 
       searchClause += dateRangeClause;
@@ -89,7 +103,6 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     if (selectedColumn) {
       dataRoute += `&$order=${selectedColumn} ${sortOrder}`;
     }
-
     return {
       data: dataRoute,
       count: countRoute,
@@ -105,6 +118,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     queryValue.startDate,
     queryValue.endDate,
   ]);
+
   useEffect(() => {
     const fetchTableData = async () => {
       try {
@@ -119,7 +133,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
       }
     };
     fetchTableData();
-  }, [API_ROUTES]);
+  }, [API_ROUTES, sortOrder]);
 
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
   const pages = [];
@@ -282,8 +296,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
                         <button
                           className="sortMenuBtn"
                           onClick={() => {
-                            setSortOrder("ASC");
-                            setSelectedColumn(column.fieldName);
+                            updateOrder(column.fieldName, "ASC");
                           }}
                         >
                           <span className="sortMenuIco">
@@ -296,8 +309,7 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
                         <button
                           className="sortMenuBtn"
                           onClick={() => {
-                            setSortOrder("DESC");
-                            setSelectedColumn(column.fieldName);
+                            updateOrder(column.fieldName, "DESC");
                           }}
                         >
                           <BsSortDownAlt size={"1.5rem"} />
