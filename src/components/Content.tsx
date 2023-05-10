@@ -10,9 +10,9 @@ import chart from "../assets/chart.webp";
 
 const Content: FC<PropsColumns> = ({ columns }) => {
   return (
-    <Container className="content">
+    <Container>
       <Row>
-        <Col xs={1} style={{ paddingRight: "0px" }}>
+        <Col xs={1} >
           <div className="navContent">
             <Link to="/">
               <img src={chart} alt="Chart" className="navIcon" />
