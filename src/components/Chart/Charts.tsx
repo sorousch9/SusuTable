@@ -26,8 +26,8 @@ const Charts: FC<PropsColumns> = ({ columns }) => {
       measure: Number(__measure_alias__),
     }));
   return (
-    <Row style={{justifyContent:"space-between"}}>
-      <Col xs={1} >
+    <Row style={{ justifyContent: "space-between" }}>
+      <Col xs={1}>
         <NavChart />
       </Col>
       <Col xs={8}>
@@ -37,22 +37,22 @@ const Charts: FC<PropsColumns> = ({ columns }) => {
             element={<LineChartE dataPoints={dataPoints} />}
           />
           <Route
-            path="/pieChart"
+            path="/piechart"
             element={<PeiChartE dataPoints={dataPoints} />}
           />
           <Route
             path="/scatterChart"
             element={<ScatterChartE dataPoints={dataPoints} />}
           />
-          <Route path="/" element={<AreaChartE dataPoints={dataPoints} />} />
+          <Route
+            path="/areaChart"
+            element={<AreaChartE dataPoints={dataPoints} />}
+          />
           <Route
             path="/barChart"
             element={<BarChartE dataPoints={dataPoints} />}
           />
-          <Route
-            path="/histogram"
-            element={<Histogram dataPoints={dataPoints} />}
-          />
+          <Route path="/" element={<Histogram dataPoints={dataPoints} />} />
         </Routes>
       </Col>
       <Col xs={3}>
