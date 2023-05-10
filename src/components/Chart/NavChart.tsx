@@ -14,40 +14,39 @@ import { BiScatterChart } from "react-icons/bi";
 const NavChart = () => (
   <div className="navContent">
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Area Chart</Tooltip>}>
-      <NavLink to={"/"} className="navIcons">
+      <NavLink to={"/chart/areaChart"} className="navIcons">
         <FcAreaChart />
       </NavLink>
     </OverlayTrigger>
 
     <OverlayTrigger
-      placement="bottom"
-      overlay={<Tooltip>Scatter Chart </Tooltip>}
+      placement="bottom" overlay={<Tooltip>Scatter Chart </Tooltip>}
     >
-      <NavLink to={"/scatterChart"} className="navIcons">
+      <NavLink to={"/chart/scatterChart"} className="navIcons">
         <BiScatterChart />
       </NavLink>
     </OverlayTrigger>
 
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Pie Chart</Tooltip>}>
-      <NavLink to={"/pieChart"} className="navIcons">
+      <NavLink to={"/chart/piechart"} className="navIcons">
         <FcDoughnutChart />
       </NavLink>
     </OverlayTrigger>
 
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Line Chart</Tooltip>}>
-      <NavLink to={"/lineChart"} className="navIcons">
+      <NavLink to={"/chart/lineChart"} className="navIcons">
         <FcLineChart />
       </NavLink>
     </OverlayTrigger>
 
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Bar Chart </Tooltip>}>
-      <NavLink to={"/barChart"} className="navIcons">
+      <NavLink to={"/chart/barChart"} className="navIcons">
         <FcBarChart />
       </NavLink>
     </OverlayTrigger>
 
     <OverlayTrigger placement="bottom" overlay={<Tooltip>Histogram</Tooltip>}>
-      <NavLink to={"/histogram"} className="navIcons">
+      <NavLink to={"/chart"} className="navIcons">
         <FcComboChart />
       </NavLink>
     </OverlayTrigger>
