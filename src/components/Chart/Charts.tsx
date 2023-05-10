@@ -26,8 +26,8 @@ const Charts: FC<PropsColumns> = ({ columns }) => {
       measure: Number(__measure_alias__),
     }));
   return (
-    <Row>
-      <Col xs={1} style={{ padding: "0px" }}>
+    <Row style={{justifyContent:"space-between"}}>
+      <Col xs={1} >
         <NavChart />
       </Col>
       <Col xs={8}>
