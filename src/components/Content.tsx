@@ -12,12 +12,12 @@ const Content: FC<PropsColumns> = ({ columns }) => {
   return (
     <Container>
       <Row>
-        <Col xs={1} >
+        <Col xs={1}>
           <div className="navContent">
-            <Link to="/">
+            <Link to="/chart">
               <img src={chart} alt="Chart" className="navIcon" />
             </Link>
-            <Link to="/map">
+            <Link to="/">
               <img src={map} alt="Map" className="navIcon" />
             </Link>
           </div>
@@ -25,8 +25,8 @@ const Content: FC<PropsColumns> = ({ columns }) => {
         <Col xs={11}>
           <div className="contentItem">
             <Routes>
-              <Route path="/*" element={<Charts columns={columns} />} />
-              <Route path="/map" element={<Map />} />
+              <Route path="/chart/*" element={<Charts columns={columns} />} />
+              <Route path="/" element={<Map />} />
             </Routes>
           </div>
         </Col>
