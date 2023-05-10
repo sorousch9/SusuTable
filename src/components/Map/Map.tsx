@@ -43,6 +43,7 @@ const Map: React.FC = () => {
   }, []);
 
   return (
+    <div className="map">
       <LoadScript googleMapsApiKey={apiKey}>
         <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
           {mapData?.features.map((feature) => (
@@ -56,6 +57,7 @@ const Map: React.FC = () => {
           ))}
         </GoogleMap>
       </LoadScript>
+    </div>
   );
 };
 
