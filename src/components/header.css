@@ -1,0 +1,37 @@
+.header {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  justify-content: space-between;
+  padding-top: 0.4rem;
+  padding-bottom: 0.3rem;
+}
+
+.logoContainer {
+  margin-right: 20px;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+  padding-left: 1rem;
+}
+
+.description {
+  text-align: center;
+  width: 100%;
+  position: absolute;
+  z-index: 3;
+}
+
+.appName {
+  font-size: 24px;
+  margin: 0;
+  color: #333;
+}
+
+.appDescription {
+  font-size: 14px;
+  margin: 0;
+  color: #777;
+}
