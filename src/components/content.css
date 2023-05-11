@@ -1,10 +1,11 @@
-.navContent {
+.navigationContainer {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  flex: 1;
 }
-.navIcon {
+.navigationLinksIcon {
   display: block;
   margin: 10px auto;
   width: 80px;
@@ -14,10 +15,28 @@
   transition: transform 0.2s ease-in-out;
 }
 
-.navIcon:hover {
+.navigationLinksIcon:hover {
   transform: scale(1.2);
   filter: drop-shadow(5px 10px 10px #959595);
 }
-.contentItem {
+.contentWrapper {
   height: 50vh;
+  flex: 22;
+}
+/* Adjust styles for screens smaller than 768px */
+@media (max-width: 768px) {
+  .navigationContainer {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .navigationLinksIcon {
+    margin: 10px;
+    width: 60px;
+    height: 60px;
+  }
+
+  .contentWrapper {
+    height: auto;
+  }
 }
