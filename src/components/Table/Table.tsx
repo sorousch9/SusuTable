@@ -13,7 +13,7 @@ const PAGE_SIZE = 10;
 const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
   const [selectedColumn, setSelectedColumn] = useState<string>("");
   const [data, setData] = useState<DataRow[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalCount, setTotalCount] = useState<number>(0);
   const [sortOrder, setSortOrder] = useState<"ASC" | "DESC" | string>("");
   const [inputSelectedColumn, setInputSelectedColumn] = useState({
@@ -35,11 +35,10 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
     setSelectedColumn(columnName);
     setSortOrder(newSortOrder);
   }
-
   const API_BASE_URL = "https://data.cityofnewyork.us";
   const API_ROUTES = useMemo(() => {
-    let dataRoute = `/id/xnfm-u3k5.json?$limit=${PAGE_SIZE}&$offset=${currentPage}&$order=${selectedColumn} ${sortOrder}`;
-    let countRoute = `/id/xnfm-u3k5.json?$select=count(*) as __count_alias__`;
+    let dataRoute = `/api/id/if26-z6xq.json?$limit=${PAGE_SIZE}&$offset=${currentPage}&$order=${selectedColumn} ${sortOrder}`;
+    let countRoute = `/api/id/if26-z6xq.json?$select=count(*) as __count_alias__`;
 
     let searchClause = "$where=";
     let rangeClause = "";
@@ -178,8 +177,8 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
                             <input
                               type="number"
                               placeholder="Min number"
-                              min={column.cachedContents.smallest}
-                              max={column.cachedContents.largest}
+                              min={column.cachedContents?.smallest}
+                              max={column.cachedContents?.largest}
                               value={
                                 inputSelectedColumn.minValue ===
                                 column.fieldName
@@ -201,8 +200,8 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
                             <input
                               type="number"
                               placeholder="Max number"
-                              min={column.cachedContents.smallest}
-                              max={column.cachedContents.largest}
+                              min={column.cachedContents?.smallest}
+                              max={column.cachedContents?.largest}
                               value={
                                 inputSelectedColumn.maxValue ===
                                 column.fieldName
@@ -226,8 +225,8 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
                             <label>Start date:</label>
                             <input
                               type="date"
-                              min={column.cachedContents.smallest}
-                              max={column.cachedContents.largest}
+                              min={column.cachedContents?.smallest}
+                              max={column.cachedContents?.largest}
                               value={
                                 inputSelectedColumn.startDate ===
                                 column.fieldName
@@ -245,8 +244,8 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
                             <label>End date:</label>
                             <input
                               type="date"
-                              min={column.cachedContents.smallest}
-                              max={column.cachedContents.largest}
+                              min={column.cachedContents?.smallest}
+                              max={column.cachedContents?.largest}
                               value={
                                 inputSelectedColumn.endDate === column.fieldName
                                   ? queryValue.endDate.toString()
@@ -314,12 +313,19 @@ const TableAPI: FC<PropsStateColumns> = ({ columns, setColumns }) => {
                   overlay={
                     <Popover>
                       <Popover.Body as="span">
-                        {row[column.fieldName]}
+                        {typeof row[column.fieldName] === "object"
+                          ? JSON.stringify(row[column.fieldName])
+                          : row[column.fieldName]}
                       </Popover.Body>
                     </Popover>
                   }
                 >
-                  <td key={columnIndex}>{row[column.fieldName]}</td>
+                  <td key={columnIndex}>
+                    {/* Check if the value is an object */}
+                    {typeof row[column.fieldName] === "object"
+                      ? JSON.stringify(row[column.fieldName])
+                      : row[column.fieldName]}
+                  </td>
                 </OverlayTrigger>
               ))}
             </tr>
