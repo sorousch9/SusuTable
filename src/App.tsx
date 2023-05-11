@@ -8,10 +8,9 @@ import Content from "./components/Content";
 
 const App = () => {
   const [columns, setColumns] = useState<Column[]>([]);
-
   useEffect(() => {
     axios
-      .get("https://data.cityofnewyork.us/api/views/xnfm-u3k5.json")
+      .get("https://data.cityofnewyork.us/api/views/if26-z6xq.json?read_from_nbe=true&version=2.1")
       .then((response) => {
         setColumns(response.data.columns);
       })
