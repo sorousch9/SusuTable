@@ -3,7 +3,7 @@
   flex: 22;
 }
 /* Adjust styles for screens smaller than 768px */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
   .contentWrapper {
     height: auto;
   }
