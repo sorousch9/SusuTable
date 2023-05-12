@@ -1,7 +1,7 @@
 .navContent {
   display: flex;
   height: 50vh;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   flex-direction: column;
 }
@@ -15,4 +15,11 @@
 }
 .navIcons svg:hover {
   background-color: #ededed;
+}
+@media only screen and (max-width: 1200px) {
+  .navContent {
+    height: auto;
+    flex-direction: row;
+    width: 100vw;
+  }
 }
