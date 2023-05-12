@@ -26,7 +26,7 @@ const LineChartE: FC<DataProps> = ({ dataPoints }) => {
         <Tooltip />
         <Legend verticalAlign="top" />
         <Line
-          type="monotone"
+          type="basis"
           name="Dimension :X  Measure:Y"
           dataKey="measure"
           stroke="#8884d8"
