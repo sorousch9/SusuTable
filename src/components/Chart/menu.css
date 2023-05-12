@@ -28,3 +28,13 @@
 .accordion-content.active {
   display: block;
 }
+@media only screen and (max-width: 1200px) {
+  .accordion {
+    width: 30vw;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .accordion {
+    width: auto;
+  }
+}

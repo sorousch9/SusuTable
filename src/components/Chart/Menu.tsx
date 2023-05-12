@@ -6,24 +6,22 @@ import axios from "axios";
 import { Column } from "../../../types/tableTypes";
 
 interface DataItem {
-  [key: string]: string | number ;
+  [key: string]: string | number;
 }
 interface PropsMenu {
   columns: Column[];
   setAxlesData: React.Dispatch<React.SetStateAction<DataItem[]>>;
 }
-const apiUrl = "https://data.cityofnewyork.us/api/id/xnfm-u3k5.json";
+const apiUrl = "https://data.cityofnewyork.us/api/id/if26-z6xq.json";
 
 function Menu({ columns, setAxlesData }: PropsMenu) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [dimension, setDimension] = useState("boroughname");
-  const [measure, setMeasure] = useState("communityboard");
+  const [dimension, setDimension] = useState(":@computed_region_92fq_4b7q");
+  const [measure, setMeasure] = useState("precinct");
   useEffect(() => {
     async function fetchData() {
       const query = `SELECT \`${dimension}\` AS __dimension_alias__, SUM(\`${measure}\`) AS __measure_alias__ GROUP BY \`${dimension}\` ORDER BY __dimension_alias__ DESC NULL LAST LIMIT 1000`;
-      const url = `${apiUrl}?$query=${encodeURIComponent(
-        query
-      )}&$$read_from_nbe=true&$$version=2.1`;
+      const url = `${apiUrl}?$query=${encodeURIComponent(query)}`;
 
       try {
         const response = await axios.get(url);
