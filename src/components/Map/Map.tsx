@@ -18,7 +18,7 @@ type MapData = {
 
 const containerStyle = {
   width: "100%",
-  height: "50vh",
+  height: "49vh",
 };
 
 const center = {
