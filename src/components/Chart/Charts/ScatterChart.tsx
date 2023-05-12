@@ -23,7 +23,7 @@ function ScatterChartE({ dataPoints }: DataProps) {
         <XAxis dataKey="dimension" name="X-axis" />
         <YAxis dataKey="measure" name="Y-axis" />
         <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-        <Scatter data={dataPoints} fill="#8884d8" shape="cross" />
+        <Scatter data={dataPoints} fill="#8884d8" shape="circle" />
       </ScatterChart>
     </ResponsiveContainer>
   );
