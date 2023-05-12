@@ -25,12 +25,7 @@ const AreaChartE: FC<DataProps> = ({ dataPoints }) => {
         <XAxis dataKey="dimension" name="X-axis" />
         <YAxis name="Y-axis" />
         <Tooltip />
-        <Area
-          type="monotone"
-          dataKey="measure"
-          stroke="#8884d8"
-          fill="#8884d8"
-        />
+        <Area type="basis" dataKey="measure" stroke="#8884d8" fill="#8884d8" />
       </AreaChart>
     </ResponsiveContainer>
   );
