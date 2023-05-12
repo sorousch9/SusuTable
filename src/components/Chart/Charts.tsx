@@ -1,5 +1,4 @@
 import { useState, FC } from "react";
-import { Col, Row } from "react-bootstrap";
 import { Route, Routes } from "react-router-dom";
 import NavChart from "./NavChart";
 import Menu from "./Menu";
@@ -11,9 +10,11 @@ import LineChartE from "./Charts/LineChart";
 import AreaChartE from "./Charts/AreaChart";
 import BarChartE from "./Charts/BarChart";
 import Histogram from "./Charts/Histogram";
+import "./chart.css";
 interface DataItem {
   [key: string]: string | number;
 }
+
 const Charts: FC<PropsColumns> = ({ columns }) => {
   const [axlesData, setAxlesData] = useState<DataItem[]>([]);
   const dataPoints: ChartDataPoint[] = axlesData
@@ -25,12 +26,13 @@ const Charts: FC<PropsColumns> = ({ columns }) => {
       dimension: String(__dimension_alias__),
       measure: Number(__measure_alias__),
     }));
+
   return (
-    <Row style={{ justifyContent: "space-between" }}>
-      <Col xs={1}>
+    <div className="chartsContainer">
+      <div className="navChartContainer">
         <NavChart />
-      </Col>
-      <Col xs={8}>
+      </div>
+      <div className="chartsWrapper">
         <Routes>
           <Route
             path="/lineChart"
@@ -54,11 +56,12 @@ const Charts: FC<PropsColumns> = ({ columns }) => {
           />
           <Route path="/" element={<Histogram dataPoints={dataPoints} />} />
         </Routes>
-      </Col>
-      <Col xs={3}>
+      </div>
+      <div className="menuContainer">
         <Menu setAxlesData={setAxlesData} columns={columns} />
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 };
+
 export default Charts;
